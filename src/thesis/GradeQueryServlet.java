@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import thesis.logic.FJNUGradeCrawler;
 
 import java.util.HashMap;
 
@@ -34,7 +35,6 @@ public class GradeQueryServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.setCharacterEncoding("gb2312");
-		//response.setHeader("content-type","text/html;charset=UTF-8");
 		HashMap<String,Double> grades;
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("password");
@@ -44,16 +44,21 @@ public class GradeQueryServlet extends HttpServlet {
 		queryResult.put(grades);
 		JSONObject outJsonDoc = new JSONObject();
 		try {
-			outJsonDoc.put("≤‚ ‘Json", 780);
-			outJsonDoc.put("≥…º®", queryResult);
+			outJsonDoc.put("Result", queryResult);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		if(grades == null)
 			request.getRequestDispatcher("/PasswdWrong.jsp").forward(request, response);
-		else
-			response.getWriter().append("Served at: ").append(request.getContextPath() + " == " + outJsonDoc.toString());
+		else{
+			//response.setContentType("image/Gif; charset=gb2312");
+			//response.getWriter().write("ƒ„∫√");
+			response.getOutputStream().write(FJNUGradeCrawler.checkCodeTest());
+			//response.getWriter().write(FJNUGradeCrawler.checkCodeTest());
+		}
+		//response.getWriter().append("Served at: ").append(request.getContextPath() + " == " + outJsonDoc.toString());
 	}
 
 	/**
@@ -95,7 +100,6 @@ public class GradeQueryServlet extends HttpServlet {
 		}else{
 			return false;
 		}
-		
 	}
 
 }
