@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
+import thesis.httpMethod.HttpManager;
 import thesis.logic.FJNUGradeCrawler;
 
 import java.util.HashMap;
@@ -49,6 +51,18 @@ public class GradeQueryServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		
+		//test
+		FJNUGradeCrawler crawler = new FJNUGradeCrawler();
+		//crawler.getStart("105052012035", "a48420029578");
+		//System.out.printf("Debug! : CHECK=%s\nVIEWSTATE=%s\n",request.getParameter("checkCode"),request.getParameter("viewState"));
+		//crawler.setLoginInfo("105052012035", "a4842029578", 
+		//		request.getParameter("checkCode"),request.getParameter("viewState"));
+		
+        //HttpManager.getCheckcodeToSave("http://jwgl.fjnu.edu.cn/CheckCode.aspx");
+		
+		crawler.emptyReplyFinish();
 		
 		if(grades == null)
 			request.getRequestDispatcher("/PasswdWrong.jsp").forward(request, response);

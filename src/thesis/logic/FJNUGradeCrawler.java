@@ -16,7 +16,7 @@ import thesis.httpMethod.HttpManager;
 
 public class FJNUGradeCrawler {
 	
-	private final String loginUrlStr = "http://jwgl.fjnu.edu.cn/default2.aspx";
+	static private final String loginUrlStr = "http://jwgl.fjnu.edu.cn/default2.aspx";
 	private final String mainUrlStr = "http://jwgl.fjnu.edu.cn/xs_main.aspx?xh=";
 	static private final String checkImageUrlStr = "http://jwgl.fjnu.edu.cn/CheckCode.aspx";
 	
@@ -26,7 +26,7 @@ public class FJNUGradeCrawler {
 	
 	private HashMap<String,String> grades;
 	private URL loginUrl,mainUrl;
-	private String viewState;
+	private String viewStateStr;
 	
 	static public byte[] checkCodeTest(){
 		byte[] res = HttpManager.getCheckcodeToSave(checkImageUrlStr);
@@ -43,22 +43,38 @@ public class FJNUGradeCrawler {
 	
 	public FJNUGradeCrawler() throws IOException{
 		loginUrl = new URL(loginUrlStr);
-		
+		grades = new HashMap<String,String>();
 	}
 	
-	public void getStart(String name,String passwordNum){
+	public static void getStart(String name,String passwordNum){
 		HttpManager.clearSpecialHeader();
 		HttpManager.addSpecialHeader("content-type", "application/x-www-form-urlencoded");
-		emptyReplyFinish(HttpManager.sendPost(loginUrlStr,""));
+		//getViewState(HttpManager.sendPost(loginUrlStr,""));
 	}
 	
-	public void setLoginInfo(String name,String passwordNum,String checkCode){
+	public static String getViewState(){
+		HttpManager.clearSpecialHeader();
+		HttpManager.addSpecialHeader("content-type", "application/x-www-form-urlencoded");
+		String reply = HttpManager.sendGet(loginUrlStr,"");
+		String viewState = "";
+		Pattern pattern = Pattern.compile("__VIEWSTATE\" value=\"([^>]*)\" />");
+    	Matcher matcher = pattern.matcher(reply);
+    	if(matcher.find()){
+    		viewState = matcher.group(1);
+    		System.out.println("Matched! ViewState is :"+viewState );
+    		return viewState;
+    	}
+    	else
+    		return null;
+	}
+	
+	public void setLoginInfo(String name,String passwordNum,String checkCode,String viewState){
 		initialize();
 		nameStr = name;
 		passwordStr = passwordNum;
 		checkCodeStr = checkCode;
+		viewStateStr = viewState;
 	}
-	
 	public void setSearcInfo(String xn,String xq,String xqxn){
 	    ddlXNStr=xn;
 	    ddlXQStr=xq;
@@ -120,7 +136,7 @@ public class FJNUGradeCrawler {
         ddlXNStr = "";
         ddlXQStr = "";
         xnxqStr = "";
-        viewState = "";
+        viewStateStr = "";
     }
     private void saveAsXml(String src){
     	StringBuffer newContent = new StringBuffer();
@@ -167,17 +183,23 @@ public class FJNUGradeCrawler {
 //        qDebug()<<"saved 34.xml";
     }
     
-    private void emptyReplyFinish(String reply){
-    	System.out.println(reply);
-    	Pattern pattern = Pattern.compile("__VIEWSTATE\" value=\"([^>]*)\" />");
-    	Matcher matcher = pattern.matcher(reply);
-    	viewState = matcher.group();
-    	
+    public void emptyReplyFinish(){
+    	//System.out.println(reply);
+//    	Pattern pattern = Pattern.compile("__VIEWSTATE\" value=\"([^>]*)\" />");
+//    	Matcher matcher = pattern.matcher(reply);
+//    	if(matcher.find())
+//    		viewState = matcher.group();
+//    	else
+//    		return;
     	HashMap<String,String> params = new HashMap<String,String>();
-    	params.put("__VIEWSTATE",viewState);
-    	params.put("txtUserName",nameStr);
-    	params.put("TextBox2",passwordStr);
-        params.put("txtSecretCode",checkCodeStr);
+    	//params.put("__VIEWSTATE",viewStateStr);
+    	//params.put("txtUserName",nameStr);
+    	//params.put("TextBox2",passwordStr);
+        //params.put("txtSecretCode",checkCodeStr);
+    	params.put("__VIEWSTATE","dDwyODE2NTM0OTg7Oz79m7/udPyyThgiewzzwnr1AnohgA==");
+    	params.put("txtUserName","105052012035");
+    	params.put("TextBox2","a4842029578");
+        params.put("txtSecretCode","febk");
         params.put("RadioButtonList1","学生");
         params.put("Button1","");
         params.put("lbLanguage","");
@@ -185,8 +207,14 @@ public class FJNUGradeCrawler {
         params.put("hidsc","");
         
         HttpManager.clearSpecialHeader();
+        HttpManager.addSpecialHeader("Accept", "image/gif, image/jpeg, image/pjpeg, application/x-ms-application, application/xaml+xml, application/x-ms-xbap, */*");
+        HttpManager.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
+        HttpManager.addSpecialHeader("Cache-Control","no-cache");
         HttpManager.addSpecialHeader("Host", "jwgl.fjnu.edu.cn");
-        HttpManager.addSpecialHeader("Referer","http://jwgl.fjnu.edu.cn/default6.aspx");
+        HttpManager.addSpecialHeader("Referer","http://jwgl.fjnu.edu.cn/");
+        HttpManager.addSpecialHeader("Cookie", HttpManager.cookie);
+        System.out.println("Params:" + params.toString());
+        System.out.print(HttpManager.sendPost(loginUrlStr, params));
         //replyFinish(HttpManager.sendPost(loginUrlStr, params));
     }
 
@@ -210,12 +238,12 @@ public class FJNUGradeCrawler {
 	private void getReplyFinished(String reply){
 		Pattern pattern = Pattern.compile("__VIEWSTATE\" value=\"([^>]*)\" />");
 		Matcher matcher = pattern.matcher(reply);
-		viewState = matcher.group().replaceAll("+", "%2B");
+		viewStateStr = matcher.group().replaceAll("+", "%2B");
 		
 		HashMap<String,String> param = new HashMap<String,String>();
 		param.put("__EVENTARGUMENT","");
 		param.put("__EVENTTARGET","");
-		param.put("__VIEWSTATE",viewState);
+		param.put("__VIEWSTATE",viewStateStr);
 		param.put("hidLanguage","");
 		param.put("ddlxn",ddlXNStr);//学年
 		param.put("ddlxq",ddlXQStr);//学期

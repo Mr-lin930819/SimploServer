@@ -13,6 +13,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
@@ -40,9 +42,13 @@ public class HttpManager {
 	                 "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
 	         connection.connect();
 	         in = connection.getInputStream();
-	         //BufferedImage bi = ImageIO.read(in);
-	         //File f = new File( "G:/check_img.gif");
-	         //ImageIO.write(bi, "gif", f);
+	         
+	         BufferedImage bi = ImageIO.read(in);
+	         File f = new File( "D:/workspace/SimploServer/WebContent/check_img.gif");
+	         if(f.exists()){
+	        	 System.out.println("NULL");
+	         }
+	         ImageIO.write(bi, "gif", f);
 	         
  			ret = new byte[in.available()];
  			in.read(ret);
@@ -94,8 +100,12 @@ public class HttpManager {
                 if(key == null)
                 	continue;
                 if(key.equalsIgnoreCase("set-cookie")){
-                	cookie = map.get(key).get(0);
+                	Matcher cookieMatcher = Pattern.compile("ASP.NET_SessionId=(.*);").matcher(map.get(key).get(0));
+                	//System.out.println(map.get(key).get(0));
+                	if(cookieMatcher.find())
+                		cookie = "ASP.NET_SessionId=" + cookieMatcher.group(1);
                 }
+                
             }
             // 定义 BufferedReader输入流来读取URL的响应
             in = new BufferedReader(new InputStreamReader(
@@ -139,7 +149,7 @@ public class HttpManager {
             // 打开和URL之间的连接
             HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
             // 设置通用的请求属性
-            conn.setRequestProperty("accept", "*/*");
+            //conn.setRequestProperty("accept", "*/*");
             conn.setRequestProperty("connection", "Keep-Alive");
             conn.setRequestProperty("user-agent",
                     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
