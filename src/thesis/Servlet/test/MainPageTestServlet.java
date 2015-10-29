@@ -136,7 +136,7 @@ public class MainPageTestServlet extends HttpServlet {
 		 * 	第4步，get请求，获取 最新的ViewState以访问成绩查询页面
 		 *  返回页面：包含VIEWSTATE,解析，并且将其中的“+”替换成“%2B”
 		 */
-        String newMainUrl = "http://jwgl.fjnu.edu.cn/xscjcx_dq.aspx?xh="+"105052012035"+"&xm="+xmStr+"&gnmkdm="+gnmkdmStr;
+        String newMainUrl = "http://jwgl.fjnu.edu.cn/xscj_gc.aspx?xh="+"105052012035"+"&xm="+xmStr+"&gnmkdm="+gnmkdmStr;
 		String refererUrl = "http://jwgl.fjnu.edu.cn/xs_main.aspx?xh=" + "105052012035";
 		HttpManager.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
 		HttpManager.addSpecialHeader("Referer",refererUrl);
