@@ -9,7 +9,6 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  
   <servlet>
     <servlet-name>GradeQuery</servlet-name>
     <servlet-class>thesis.GradeQueryServlet</servlet-class>
@@ -18,5 +17,4 @@
     <servlet-name>GradeQuery</servlet-name>
     <url-pattern>/QueryGradeServlet</url-pattern>
   </servlet-mapping>
-  
 </web-app>

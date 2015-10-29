@@ -75,23 +75,28 @@ public class HttpManager {
         String result = "";
         BufferedReader in = null;
         try {
-            String urlNameString = url + "?" + param;
+            String urlNameString = "";
+            if(param.equals("")){
+            	urlNameString = url ;
+            }else{
+            	urlNameString = url + "?" + param;
+            }
             URL realUrl = new URL(urlNameString);
             // 打开和URL之间的连接
             HttpURLConnection connection = (HttpURLConnection)realUrl.openConnection();
             // 设置通用的请求属性
-            connection.setRequestProperty("accept", "*/*");
-            connection.setRequestProperty("connection", "Keep-Alive");
-            connection.setRequestProperty("user-agent",
-                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            connection.setRequestProperty("Accept", "image/gif, image/jpeg, image/pjpeg, application/x-ms-application, application/xaml+xml, application/x-ms-xbap, */*");
+            connection.setRequestProperty("Connection", "Keep-Alive");
+            connection.setRequestProperty("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.152 Safari/537.36");
             for(Map.Entry<String, String> entry : specialHeader.entrySet()){
             	connection.setRequestProperty(entry.getKey(), entry.getValue());
             }
             // 建立实际的连接
             connection.connect();
-            if(connection.getResponseCode() != 200){
-            	return "";
-            }
+            //if(connection.getResponseCode() != 200){
+            //	return "";
+            //}
             // 获取所有响应头字段
             Map<String, List<String>> map = connection.getHeaderFields();
             // 遍历所有的响应头字段
@@ -143,18 +148,21 @@ public class HttpManager {
     public static String sendPost(String url, String param) {
         PrintWriter out = null;
         BufferedReader in = null;
-        String result = "";
+        String result = "",cookieHeader = "";
         try {
             URL realUrl = new URL(url);
             // 打开和URL之间的连接
             HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
             // 设置通用的请求属性
-            //conn.setRequestProperty("accept", "*/*");
-            conn.setRequestProperty("connection", "Keep-Alive");
-            conn.setRequestProperty("user-agent",
-                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            conn.setRequestProperty("Accept", "image/gif, image/jpeg, image/pjpeg, application/x-ms-application, application/xaml+xml, application/x-ms-xbap, */*");
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.152 Safari/537.36");
             for(Map.Entry<String, String> entry : specialHeader.entrySet()){
-            	conn.setRequestProperty(entry.getKey(), entry.getValue());
+            	String key = entry.getKey(), value = entry.getValue();
+//            	conn.setRequestProperty(entry.getKey(), entry.getValue());
+            	conn.setRequestProperty(key, value);
+            	System.out.println("SendPostPara:"+key+","+value);
             }
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);
@@ -165,7 +173,32 @@ public class HttpManager {
             out.print(param);
             // flush输出流的缓冲
             out.flush();
-            // 定义BufferedReader输入流来读取URL的响应
+            
+            //保存响应头中设置Cookie的头数据
+//            Map<String, List<String>> map = conn.getHeaderFields();
+//            // 遍历所有的响应头字段
+//            for (String key : map.keySet()) {
+//                System.out.println(key + "--->" + map.get(key));
+//                if(key == null)
+//                	continue;
+//                if(key.equalsIgnoreCase("set-cookie")){
+//                	Matcher cookieMatcher = Pattern.compile("ASP.NET_SessionId=(.*);").matcher(map.get(key).get(0));
+//                	//System.out.println(map.get(key).get(0));
+//                	if(cookieMatcher.find())
+//                		cookie = "ASP.NET_SessionId=" + cookieMatcher.group(1);
+//                }
+//                
+//            }
+            cookieHeader = conn.getHeaderField("Set-Cookie");
+            if(cookieHeader != null){
+            	Matcher cookieMatcher = Pattern.compile("ASP.NET_SessionId=(.*);").matcher(cookieHeader);
+            //System.out.println(map.get(key).get(0));
+	        	if(cookieMatcher.find())
+	        		cookie = "ASP.NET_SessionId=" + cookieMatcher.group(1);
+	        	System.out.println("POST==COOKIE:"+cookie);
+            }
+        	
+            // 定义BufferedReader输入流来读取URL的响应            
             in = new BufferedReader(
                     new InputStreamReader(conn.getInputStream()));
             String line;

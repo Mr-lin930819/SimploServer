@@ -101,6 +101,7 @@ public class FJNUGradeCrawler {
         	xmStr=xmMatcher.group(1);
         gnmkdmStr="N121617";//表示成绩查询的编号
     }
+    
     private void saveData(String pageContent){
     	String rexStr = "<td>"+ddlXNStr+"</td><td>"+ddlXQStr+"</td><td>([0-9]{2,10})</td><td>"
         			  +	"([^</td>]{0,30})</td><td>";
@@ -199,7 +200,7 @@ public class FJNUGradeCrawler {
     	params.put("__VIEWSTATE","dDwyODE2NTM0OTg7Oz79m7/udPyyThgiewzzwnr1AnohgA==");
     	params.put("txtUserName","105052012035");
     	params.put("TextBox2","a4842029578");
-        params.put("txtSecretCode","febk");
+        params.put("txtSecretCode",checkCodeStr);
         params.put("RadioButtonList1","学生");
         params.put("Button1","");
         params.put("lbLanguage","");
@@ -215,7 +216,7 @@ public class FJNUGradeCrawler {
         HttpManager.addSpecialHeader("Cookie", HttpManager.cookie);
         System.out.println("Params:" + params.toString());
         System.out.print(HttpManager.sendPost(loginUrlStr, params));
-        //replyFinish(HttpManager.sendPost(loginUrlStr, params));
+        replyFinish(HttpManager.sendPost(loginUrlStr, params));
     }
 
 	private void replyFinish(String reply){
@@ -226,13 +227,13 @@ public class FJNUGradeCrawler {
 	}
 	
 	private void getXMFinished(String reply){
-		saveAsXml(reply);
+//		saveAsXml(reply);
 		setXm(reply);
 		String newMainUrl = "http://jwgl.fjnu.edu.cn/xscjcx_dq.aspx?xh="+nameStr+"&xm="+xmStr+"&gnmkdm="+gnmkdmStr;
 		String refererUrl = "http://jwgl.fjnu.edu.cn/xs_main.aspx?xh=" + nameStr;
 		HttpManager.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
 		HttpManager.addSpecialHeader("Referer",refererUrl);
-		getReplyFinished(HttpManager.sendGet(newMainUrl, ""));
+		//getReplyFinished(HttpManager.sendGet(newMainUrl, ""));
 	}
 	//post查成绩的数据，同时获取新的__VIEWSTATE存入以便之后读取
 	private void getReplyFinished(String reply){

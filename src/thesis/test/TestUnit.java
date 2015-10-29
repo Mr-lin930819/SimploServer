@@ -1,7 +1,16 @@
 package thesis.test;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.channels.WritableByteChannel;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import thesis.httpMethod.HttpManager;
 
 public class TestUnit {
 	
@@ -18,5 +27,9 @@ public class TestUnit {
     		ret = "No Match!";
     	}
     	System.out.println(ret);
+	}
+	
+	public static void mainPagePostTest(String viewState,String cookie,String checkCode){
+        
 	}
 }
