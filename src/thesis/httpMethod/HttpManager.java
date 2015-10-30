@@ -189,14 +189,14 @@ public class HttpManager {
 //                }
 //                
 //            }
-            cookieHeader = conn.getHeaderField("Set-Cookie");
-            if(cookieHeader != null){
-            	Matcher cookieMatcher = Pattern.compile("ASP.NET_SessionId=(.*);").matcher(cookieHeader);
-            //System.out.println(map.get(key).get(0));
-	        	if(cookieMatcher.find())
-	        		cookie = "ASP.NET_SessionId=" + cookieMatcher.group(1);
-	        	System.out.println("POST==COOKIE:"+cookie);
-            }
+//            cookieHeader = conn.getHeaderField("Set-Cookie");
+//            if(cookieHeader != null){
+//            	Matcher cookieMatcher = Pattern.compile("ASP.NET_SessionId=(.*);").matcher(cookieHeader);
+//            //System.out.println(map.get(key).get(0));
+//	        	if(cookieMatcher.find())
+//	        		cookie = "ASP.NET_SessionId=" + cookieMatcher.group(1);
+//	        	System.out.println("POST==COOKIE:"+cookie);
+//            }
         	
             // 定义BufferedReader输入流来读取URL的响应            
             in = new BufferedReader(

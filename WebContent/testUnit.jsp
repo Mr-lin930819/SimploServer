@@ -1,3 +1,4 @@
+<%@page import="thesis.logic.PreLogic"%>
 <%@page import="thesis.test.TestUnit" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -15,10 +16,14 @@ form#mainForm {
 	background: #4a5868;
 }
 
+<% 
+	String viewState = PreLogic.getOne();
+%>
+
 </style>
 	<form action="/SimploServer/MainPageTestServlet" method="get" id="mainForm">
 		<p>
-			VIEWSTATE:<input type="text" name="viewState">
+			VIEWSTATE:<input type="text" name="viewState" value=<%= viewState%>>
 		</p>
 		<p>
 			COOKIE:<input type="text" name="cookie">
@@ -26,6 +31,8 @@ form#mainForm {
 		<p>
 			CHECKCODE:<input type="text" name="checkCode">
 		</p>
+		
+		<img src="http://jwgl.fjnu.edu.cn/CheckCode.aspx">
 		<input type="submit" value="Post测试">
 	</form>
 	<br>
@@ -47,6 +54,7 @@ form#mainForm {
 	<br>
 	<HR style="FILTER: alpha(opacity=100,finishopacity=0,style=3)" width="80%" color=#987cb9 SIZE=3>
 	<br>
+	
 	
 	
 	
