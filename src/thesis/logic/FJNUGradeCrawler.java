@@ -213,16 +213,16 @@ public class FJNUGradeCrawler {
         HttpManager.addSpecialHeader("Cache-Control","no-cache");
         HttpManager.addSpecialHeader("Host", "jwgl.fjnu.edu.cn");
         HttpManager.addSpecialHeader("Referer","http://jwgl.fjnu.edu.cn/");
-        HttpManager.addSpecialHeader("Cookie", HttpManager.cookie);
+        HttpManager.addSpecialHeader("Cookie", HttpManager.cookies.get(loginUrl));
         System.out.println("Params:" + params.toString());
         System.out.print(HttpManager.sendPost(loginUrlStr, params));
         replyFinish(HttpManager.sendPost(loginUrlStr, params));
     }
 
 	private void replyFinish(String reply){
-		System.out.println(HttpManager.cookie);
+		System.out.println(HttpManager.cookies.get(loginUrl));
 		HttpManager.clearSpecialHeader();
-		HttpManager.addSpecialHeader("Cookie", HttpManager.cookie);
+		HttpManager.addSpecialHeader("Cookie", HttpManager.cookies.get(loginUrl));
 		getXMFinished(HttpManager.sendGet(mainUrlStr + nameStr, ""));
 	}
 	
@@ -264,7 +264,7 @@ public class FJNUGradeCrawler {
 		HttpManager.addSpecialHeader("Host","jwgl.fjnu.edu.cn");
 		HttpManager.addSpecialHeader("Referer",refererUrl);
 		HttpManager.addSpecialHeader("User-Agent","Mozilla/5.0");
-		HttpManager.addSpecialHeader("Cookie", HttpManager.cookie);
+		HttpManager.addSpecialHeader("Cookie", HttpManager.cookies.get(loginUrl));
 		
 		updateVSReplyFinished(HttpManager.sendPost(refererUrl, param));
 	}

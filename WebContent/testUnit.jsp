@@ -1,3 +1,5 @@
+<%@page import="thesis.httpMethod.NetworkManager"%>
+<%@page import="thesis.httpMethod.HttpManager"%>
 <%@page import="thesis.logic.PreLogic"%>
 <%@page import="thesis.test.TestUnit" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -16,23 +18,32 @@ form#mainForm {
 	background: #4a5868;
 }
 
-<% 
-	String viewState = PreLogic.getOne();
-%>
 
 </style>
-	<form action="/SimploServer/MainPageTestServlet" method="get" id="mainForm">
+<% 
+	NetworkManager nm = new NetworkManager();
+	//NetworkManager nm = (NetworkManager)request.getAttribute("nm");
+	String viewState = PreLogic.getOne(nm);
+	String cookie = nm.cookies.get("http://jwgl.fjnu.edu.cn/default2.aspx");
+	String imgSrc = "/SimploServer/CheckCodeTest?cookie=" + cookie;
+%>
+	<form action="/SimploServer/TransUserInfoServlet" method="get" id="mainForm">
+			<input type="hidden" name="viewState" value=<%= viewState%>>
+			<input type="hidden" name="cookie" value=<%=cookie %>>
+			<input type="hidden" name="xnStr" value="2014-2015">
+			<input type="hidden" name="xqStr" value="">
 		<p>
-			VIEWSTATE:<input type="text" name="viewState" value=<%= viewState%>>
+			USERNAME:<input type="text" name="username">
 		</p>
 		<p>
-			COOKIE:<input type="text" name="cookie">
+			PASSWORD:<input type="text" name="password">
 		</p>
 		<p>
 			CHECKCODE:<input type="text" name="checkCode">
 		</p>
 		
-		<img src="http://jwgl.fjnu.edu.cn/CheckCode.aspx">
+	<!--  <img src="http://jwgl.fjnu.edu.cn/CheckCode.aspx"> -->
+		<img src=<%=imgSrc %>>
 		<input type="submit" value="Post测试">
 	</form>
 	<br>

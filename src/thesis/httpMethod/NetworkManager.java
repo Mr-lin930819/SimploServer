@@ -1,14 +1,10 @@
 package thesis.httpMethod;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -16,63 +12,19 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.imageio.ImageIO;
 
+public class NetworkManager {
 
-public class HttpManager {
-
-	static{
+	
+	private HashMap<String,String> specialHeader;
+	public Map<String,String> cookies;
+	
+	public NetworkManager(){
 		specialHeader = new HashMap<String,String>();
 		cookies = new HashMap<String,String>();
 	}
-	private static HashMap<String,String> specialHeader;
-	public static Map<String,String> cookies;
 	
-	public static byte[] getCheckcodeToSave(String url){
-		InputStream in = null;
-		 URL realUrl;
-		 byte[] ret = null;
-		try {
-			realUrl = new URL(url);
-		
-	         // 打开和URL之间的连接
-	         HttpURLConnection connection = (HttpURLConnection)realUrl.openConnection();
-	         connection.setRequestProperty("accept", "*/*");
-	         connection.setRequestProperty("connection", "Keep-Alive");
-	         connection.setRequestProperty("user-agent",
-	                 "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
-	         connection.connect();
-	         in = connection.getInputStream();
-	         
-	         BufferedImage bi = ImageIO.read(in);
-	         File f = new File( "D:/workspace/SimploServer/WebContent/check_img.gif");
-	         if(f.exists()){
-	        	 System.out.println("NULL");
-	         }
-	         ImageIO.write(bi, "gif", f);
-	         
- 			ret = new byte[in.available()];
- 			in.read(ret);
-		}catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
-        }
-		
-		return ret;
-	}
-	
-	public static String sendGet(String url, String param) {
+	public String sendGet(String url, String param) {
         String result = "";
         BufferedReader in = null;
         try {
@@ -110,7 +62,9 @@ public class HttpManager {
                 	//System.out.println(map.get(key).get(0));
                 	if(cookieMatcher.find()){
                 		//cookie = "ASP.NET_SessionId=" + cookieMatcher.group(1);
-                		cookies.put(url, "ASP.NET_SessionId=" + cookieMatcher.group(1));
+                		
+                		if(!cookies.containsKey(url))
+                			cookies.put(url, "ASP.NET_SessionId=" + cookieMatcher.group(1));
                 	}
                 }
                 
@@ -148,7 +102,7 @@ public class HttpManager {
      *            请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
      * @return 所代表远程资源的响应结果
      */
-    public static String sendPost(String url, String param) {
+    public String sendPost(String url, String param) {
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "",cookieHeader = "";
@@ -165,7 +119,7 @@ public class HttpManager {
             	String key = entry.getKey(), value = entry.getValue();
 //            	conn.setRequestProperty(entry.getKey(), entry.getValue());
             	conn.setRequestProperty(key, value);
-            	System.out.println("SendPostPara:"+key+","+value);
+            	//System.out.println("SendPostPara:"+key+","+value);
             }
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);
@@ -229,7 +183,7 @@ public class HttpManager {
         return result;
     }
     
-    public static String sendPost(String url, Map<String,String> params) {
+    public String sendPost(String url, Map<String,String> params) {
         StringBuffer param = new StringBuffer();
         for(Map.Entry<String,String> entry : params.entrySet()){
         	param.append(entry.getKey() + "=" + entry.getValue());
@@ -240,11 +194,11 @@ public class HttpManager {
         return result;
     }
     
-    public static void addSpecialHeader(String key,String value){
+    public void addSpecialHeader(String key,String value){
     	specialHeader.put(key, value);
     }
     
-    public static void clearSpecialHeader(){
+    public void clearSpecialHeader(){
     	specialHeader.clear();
     }
     

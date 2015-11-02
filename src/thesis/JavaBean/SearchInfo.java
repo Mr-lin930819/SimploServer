@@ -4,8 +4,30 @@ public class SearchInfo {
 	private String number;
 	private String password;
 	private String checkCode;
+	private String cookie;
 	private String xQStr;
 	private String xNStr;
+	private String initViewState;
+	private String name;
+	public String getCookie() {
+		return cookie;
+	}
+	public void setCookie(String cookie) {
+		this.cookie = cookie;
+	}
+	public String getxQStr() {
+		return xQStr;
+	}
+	public void setxQStr(String xQStr) {
+		this.xQStr = xQStr;
+	}
+	public String getxNStr() {
+		return xNStr;
+	}
+	public void setxNStr(String xNStr) {
+		this.xNStr = xNStr;
+	}
+
 	public String getNumber() {
 		return number;
 	}
@@ -24,17 +46,17 @@ public class SearchInfo {
 	public void setCheckCode(String checkCode) {
 		this.checkCode = checkCode;
 	}
-	public String getXQStr() {
-		return xQStr;
+	public String getInitViewState() {
+		return initViewState;
 	}
-	public void setXQStr(String xQStr) {
-		this.xQStr = xQStr;
+	public void setInitViewState(String initViewState) {
+		this.initViewState = initViewState;
 	}
-	public String getXNStr() {
-		return xNStr;
+	public String getName() {
+		return name;
 	}
-	public void setXNStr(String xNStr) {
-		this.xNStr = xNStr;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

@@ -90,7 +90,7 @@ public class MainPageGetTestServlet extends HttpServlet {
          */
         System.out.println("I will Comming!!!");
         HttpManager.clearSpecialHeader();
-		HttpManager.addSpecialHeader("Cookie", HttpManager.cookie);
+		HttpManager.addSpecialHeader("Cookie", HttpManager.cookies.get(loginUrlStr));
 		reply = HttpManager.sendGet(mainUrlStr + "105052012035", "");
 		System.out.println("I am Comming!!!");
 		System.out.print(reply);

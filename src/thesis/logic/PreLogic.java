@@ -11,11 +11,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import thesis.httpMethod.HttpManager;
+import thesis.httpMethod.NetworkManager;
 
 public class PreLogic {
 	private static final String loginUrlStr = "http://jwgl.fjnu.edu.cn/default2.aspx";
 	private static final String checkImageUrlStr = "http://jwgl.fjnu.edu.cn/CheckCode.aspx";
-	public static String getOne(){
+	public static String getOne(NetworkManager nm){
 		String reply = "",viewState = "";
 		Document doc = null;
     	Element form;
@@ -23,15 +24,15 @@ public class PreLogic {
     	 *  第1步，get登录页面
     	 *  返回页面：得到页面中的ViewState值
     	 */
-    	HttpManager.clearSpecialHeader();
-		HttpManager.addSpecialHeader("content-type", "application/x-www-form-urlencoded");
-		HttpManager.addSpecialHeader("Cookie", "ASP.NET_SessionId=k2koub55s0khs5anx22pmb55");
-		reply = HttpManager.sendGet(loginUrlStr, "");
+    	nm.clearSpecialHeader();
+		nm.addSpecialHeader("content-type", "application/x-www-form-urlencoded");
+		//HttpManager.addSpecialHeader("Cookie", "ASP.NET_SessionId=k2koub55s0khs5anx22pmb55");
+		reply = nm.sendGet(loginUrlStr, "");
     	doc = Jsoup.parse(reply);
-    	System.out.print("COOOOOOOOOOOOOOOOOOOOOOOOKIE--->>"+HttpManager.cookie);
+    	//System.out.print("COOOOOOOOOOOOOOOOOOOOOOOOKIE--->>"+nm.cookies.get("http://jwgl.fjnu.edu.cn/default2.aspx"));
 		form = doc.select("input[name=__VIEWSTATE]").first();
 		viewState = form.attr("value");
-    	viewState =  viewState.replaceAll("[+]", "%2B");
+    	viewState = viewState.replaceAll("[+]", "%2B");
 //		System.out.println("__VIEWSTATE-->"+viewState);
     	return viewState;
 	}
