@@ -253,6 +253,12 @@ public class MainPageTestServlet extends HttpServlet {
 		nm.sendGet("http://jwgl.fjnu.edu.cn/logout.aspx", "");
 	}
 	
+	/**
+	 * 最后一步，提取目标页面中的成绩数据，并封装为json返回
+	 * @param content	页面内容
+	 * @param user		登录用户信息
+	 * @return			json数据
+	 */
 	private String saveGradeToJson(String content,SearchInfo user){
 		HashMap<String, String> grades = new HashMap<String,String>();
 		Document doc = null;
