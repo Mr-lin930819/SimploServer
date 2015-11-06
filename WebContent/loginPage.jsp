@@ -1,4 +1,3 @@
-<%@page import="thesis.test.TestUnit"%>
 <%@page import="thesis.logic.FJNUGradeCrawler"%>
 <%@page import="thesis.httpMethod.HttpManager"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
