@@ -42,6 +42,7 @@ public class QueryGradeServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		response.setCharacterEncoding("gb2312");
 		String resultPage = null,jsonText = null;
 		SearchInfo searchInfo = new SearchInfo(){
 			{
@@ -145,7 +146,7 @@ public class QueryGradeServlet extends HttpServlet {
 		Element table;
 		Elements courses;
 		String name,grade,result = null;
-		JSONArray jGrades = new JSONArray();
+		JSONObject jGrades = new JSONObject();
 		JSONObject jMain = new JSONObject();
 		
 		doc = Jsoup.parse(content);
@@ -155,12 +156,19 @@ public class QueryGradeServlet extends HttpServlet {
 		for(Element course:courses){
 			name = course.select("td").get(3).text();
 			grade = course.select("td").get(8).text();
-			grades.put(name, grade);
+			if(name.equals("¿Î³ÌÃû³Æ"))
+				continue;
+			try {
+				jGrades.put(name, grade);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		jGrades.put(grades);
+		//jGrades.put(grades);
 		try {
 			jMain.put("GRADE", jGrades);
-			result = jMain.toString(4);
+			result = jMain.toString();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
