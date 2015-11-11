@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +70,7 @@ public class NetworkManager {
                 }
                 
             }
+            System.out.println("Post Response Code-------->> "+ connection.getResponseCode());
             // 定义 BufferedReader输入流来读取URL的响应
             in = new BufferedReader(new InputStreamReader(
                     connection.getInputStream()));
@@ -76,6 +78,9 @@ public class NetworkManager {
             while ((line = in.readLine()) != null) {
                 result += line;
             }
+        }catch(ProtocolException e){
+        	System.out.println("协议异常");
+        	return null;
         } catch (Exception e) {
             System.out.println("发送GET请求出现异常！" + e);
             e.printStackTrace();
@@ -155,7 +160,7 @@ public class NetworkManager {
 //	        	System.out.println("POST==COOKIE:"+cookie);
 //            }
         	
-            // 定义BufferedReader输入流来读取URL的响应            
+            // 定义BufferedReader输入流来读取URL的响应   
             in = new BufferedReader(
                     new InputStreamReader(conn.getInputStream()));
             String line;

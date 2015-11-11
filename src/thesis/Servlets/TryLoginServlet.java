@@ -3,12 +3,17 @@ package thesis.Servlets;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import thesis.httpMethod.NetworkManager;
 
@@ -18,6 +23,7 @@ import thesis.httpMethod.NetworkManager;
 @WebServlet(description = "³¢ÊÔµÇÂ½µÄServlet", urlPatterns = { "/TryLoginServlet" })
 public class TryLoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private String xmStr = "";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -43,12 +49,23 @@ public class TryLoginServlet extends HttpServlet {
 			}
 		};
 		System.out.print(loginInfo.toString());
-		if(tryLogin(loginInfo) == true){
-			response.getWriter().write("1");
-		}else{
-			response.getWriter().write("0");
+		JSONObject main = new JSONObject();
+		JSONObject body = new JSONObject();
+		try{
+			if(tryLogin(loginInfo) == true){
+				main.put("xm", xmStr);
+				main.put("can", "1");
+
+			}else{
+				main.put("xm", "");
+				main.put("can", "0");
+			}
+			body.put("TRY", main);
+			System.out.println("\n" + body.toString());
+			response.getWriter().write(body.toString());
+		}catch(JSONException e){
+			e.printStackTrace();
 		}
-		
 	}
 
 	/**
@@ -93,8 +110,29 @@ public class TryLoginServlet extends HttpServlet {
         nm.addSpecialHeader("Accept-Encoding","gzip, deflate");
         nm.addSpecialHeader("Accept-Language","zh-CN,en,*");
         
-        nm.sendPost("http://jwgl.fjnu.edu.cn/default2.aspx", params);
-		return true;
+        //nm.sendPost("http://jwgl.fjnu.edu.cn/default2.aspx", params);
+        
+        System.out.println(nm.sendPost("http://jwgl.fjnu.edu.cn/default2.aspx", params));
+        String temp = nm.sendGet("http://jwgl.fjnu.edu.cn/xs_main.aspx?xh="+ loginInfo.get("number"), "");
+		if(temp == null)
+			return false;
+        Matcher xmMatcher = Pattern.compile("xm=(.{0,12})&gnmkdm=N121618")
+				.matcher(temp);
+		
+		
+		if(xmMatcher.find()){
+			xmStr = xmMatcher.group(1);
+			System.out.print("NNNNNNNNNNNNNNAME--" + xmStr);
+			return true;
+		}else{
+			return false;
+		}
+		
+//        if(nm.sendGet("http://jwgl.fjnu.edu.cn/xs_main.aspx?xh=" + loginInfo.get("number"), "") != null){
+//        	return true;
+//        }else{
+//        	return false;
+//        }
 	}
 
 }

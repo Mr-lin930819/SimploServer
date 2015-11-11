@@ -50,6 +50,7 @@ public class QueryGradeServlet extends HttpServlet {
 				setCookie(request.getParameter("cookie"));
 				setxNStr(request.getParameter("xn"));
 				setxQStr(request.getParameter("xq"));
+				setName(request.getParameter("xm"));
 			}
 		};
 		resultPage = postForGradeQuery(searchInfo);
@@ -85,10 +86,14 @@ public class QueryGradeServlet extends HttpServlet {
 		nm.clearSpecialHeader();
 		nm.addSpecialHeader("Cookie", /*HttpManager.*/user.getCookie());
 		
-		reply = nm.sendGet(refererUrl, "");
-		Matcher xmMatcher = Pattern.compile("xm=(.{0,12})&gnmkdm=N121618").matcher(reply);
-		if(xmMatcher.find())
-	       	xmStr = xmMatcher.group(1);
+		/**
+		 * 此处请求暂时移到登录部分处理，获得姓名
+		 */
+//		reply = nm.sendGet(refererUrl, "");
+//		Matcher xmMatcher = Pattern.compile("xm=(.{0,12})&gnmkdm=N121618").matcher(reply);
+//		if(xmMatcher.find())
+//	       	xmStr = xmMatcher.group(1);
+		xmStr = user.getName();
 		String newMainUrl = "http://jwgl.fjnu.edu.cn/xscj_gc.aspx?xh="+user.getNumber()+"&xm="+xmStr+"&gnmkdm="+"N121618";//gnmkdm="N121618";表示成绩查询的编号
 		
 		nm.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
