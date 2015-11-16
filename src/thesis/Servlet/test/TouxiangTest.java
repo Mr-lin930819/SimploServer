@@ -1,3 +1,6 @@
+/**
+ * 此Servlet在云服务器上运行存在问题，已废弃，将头像获取转到客户端直接从网站获取
+ */
 package thesis.Servlet.test;
 
 import java.io.File;
@@ -66,7 +69,7 @@ public class TouxiangTest extends HttpServlet {
 	         connection.setRequestProperty("Accept-Encoding", "gzip, deflate, sdch");
 	         connection.connect();
 	         in = connection.getInputStream();
-	         Thread.sleep(3000);
+	         Thread.sleep(2000);
 	         
  			retImg = new byte[in.available()];
  			System.out.println(in.available());

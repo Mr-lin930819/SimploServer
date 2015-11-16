@@ -118,7 +118,8 @@ public class QueryGradeServlet extends HttpServlet {
 		params.put("ddlXN",user.getxNStr());//学年
 		params.put("ddlXQ",user.getxQStr());//学期
 		//params.put("btnCx","+查++询+");//按学期或者按照学年查询
-		params.put("Button5","按学年查询");
+		//params.put("Button5","按学年查询");
+		params.put("Button1","按学期查询");//统一改为按学期查询，因为学期栏不填，同样可以完成按学年查询
 		
 		refererUrl = "http://jwgl.fjnu.edu.cn/xscj_gc.aspx?xh=" + 
 				user.getNumber() + "&xm="+xmStr+"&gnmkdm="+"N121618";
