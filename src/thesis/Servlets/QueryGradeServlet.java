@@ -129,7 +129,7 @@ public class QueryGradeServlet extends HttpServlet {
 		nm.addSpecialHeader("Accept-Language","zh-CN");
 		nm.addSpecialHeader("Cache-Control","no-cache");
 		nm.addSpecialHeader("Connection","Keep-Alive");
-		nm.addSpecialHeader("Content-Length","4413");
+		//nm.addSpecialHeader("Content-Length","4413");
 		nm.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
 		nm.addSpecialHeader("Host","jwgl.fjnu.edu.cn");
 		nm.addSpecialHeader("Referer",refererUrl);
@@ -147,7 +147,6 @@ public class QueryGradeServlet extends HttpServlet {
 	 * @return			jsonÊý¾Ý
 	 */
 	private String saveGradeToJson(String content){
-		HashMap<String, String> grades = new HashMap<String,String>();
 		Document doc = null;
 		Element table;
 		Elements courses;
