@@ -10,24 +10,25 @@ import thesis.httpMethod.NetworkManager;
 
 public abstract class InfoQueryTemplate {
 	
-	private String mNumber,mName,mCookie,mFuncId;
+	private String mNumber,mName,mCookie,mFuncId,mUrl;
 	private InfoQueryTemplate() {
 	}
 	
-	public InfoQueryTemplate(String number,String name,String cookie,String funcId) {
+	public InfoQueryTemplate(String number,String name,String cookie,String funcId,String url) {
 		// TODO Auto-generated constructor stub
 		mNumber = number;
 		mName	= name;
 		mCookie = cookie;
 		mFuncId = funcId;
+		mUrl	= url;
 	}
 	
 	public String doQuery(){
-		String reply = getReply(mNumber, mName, mCookie, mFuncId);
+		String reply = getReply(mNumber, mName, mCookie, mFuncId, mUrl);
 		return parseReply(reply);
 	}
 	
-	protected final String getReply(String number,String name,String cookie,String funcId){
+	protected final String getReply(String number,String name,String cookie,String funcId,String url){
 		NetworkManager nm = new NetworkManager();
     	HashMap<String,String> params = new HashMap<String,String>();
     	String reply = "";
@@ -50,7 +51,7 @@ public abstract class InfoQueryTemplate {
 //		Matcher xmMatcher = Pattern.compile("xm=(.{0,12})&gnmkdm=N121618").matcher(reply);
 //		if(xmMatcher.find())
 //	       	xmStr = xmMatcher.group(1);
-		String newMainUrl = "http://jwgl.fjnu.edu.cn/xscj_gc.aspx?xh="+number+"&xm="+name+"&gnmkdm="+funcId;//gnmkdm="N121618";表示成绩查询的编号
+		String newMainUrl = url + "?xh="+number+"&xm="+name+"&gnmkdm="+funcId;//gnmkdm="N121618";表示成绩查询的编号
 		
 		nm.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
 		nm.addSpecialHeader("Referer",refererUrl);

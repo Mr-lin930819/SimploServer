@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -24,7 +25,7 @@ import thesis.logic.InfoQueryTemplate;
 @WebServlet(description = "获取课程表信息", urlPatterns = { "/QueryCourseServlet" })
 public class QueryCourseServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+    private CourseQueryInfo courseQueryInfo = new CourseQueryInfo();   
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -40,17 +41,61 @@ public class QueryCourseServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String result;
 		response.setCharacterEncoding("gb2312");
+		courseQueryInfo.setName(request.getParameter("number"));
+		courseQueryInfo.setName(request.getParameter("name"));
+		courseQueryInfo.setCookie(request.getParameter("cookie"));
+		courseQueryInfo.setXnd(request.getParameter("xn"));
+		courseQueryInfo.setXqd(request.getParameter("xq"));
 		
-		result = new CourseQuery(request.getParameter("number"), request.getParameter("name"), 
-				request.getParameter("cookie"), "N181617").doQuery();
+		result = new CourseQuery(courseQueryInfo,"N121603").doQuery();
 		response.getWriter().append(result);
 	}
 	
+	class CourseQueryInfo {
+		private String number;
+		private String name;
+		private String cookie;
+		private String xnd;
+		private String xqd;
+		public String getNumber() {
+			return number;
+		}
+		public void setNumber(String number) {
+			this.number = number;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getCookie() {
+			return cookie;
+		}
+		public void setCookie(String cookie) {
+			this.cookie = cookie;
+		}
+		public String getXnd() {
+			return xnd;
+		}
+		public void setXnd(String xnd) {
+			this.xnd = xnd;
+		}
+		public String getXqd() {
+			return xqd;
+		}
+		public void setXqd(String xqd) {
+			this.xqd = xqd;
+		}
+		
+	}
+	
 	class CourseQuery extends InfoQueryTemplate{
-
-		public CourseQuery(String number, String name, String cookie, String funcId) {
-			super(number, name, cookie, funcId);
-			// TODO Auto-generated constructor stub
+		
+		private CourseQueryInfo mCourseQueryInfo = null;
+		public CourseQuery(CourseQueryInfo info, String funcId) {
+			super(info.number, info.name, info.cookie, funcId,"http://jwgl.fjnu.edu.cn/xskbcx.aspx");
+			mCourseQueryInfo = info;
 		}
 
 		@Override
@@ -58,44 +103,49 @@ public class QueryCourseServlet extends HttpServlet {
 			// TODO Auto-generated method stub
 			Document doc = null;
 			Element table;
-			Elements courses;
-			String name,grade,result = null;
-			JSONObject jGrades = new JSONObject();
-			JSONObject jMain = new JSONObject();
+			Elements lesson;
+			String lessonNum;
+			String[] courseName = new String[7];
+			JSONArray courses = new JSONArray();
+			JSONObject lessons = new JSONObject();
 			
 			doc = Jsoup.parse(reply);
-			table = doc.select("table[class=datelist]").first();
-			courses = table.select("tbody").select("tr");
+			table = doc.select("table[id=Tabel1]").first();
+			lesson = table.select("tbody").select("tr");
 			
-			for(Element course:courses){
-				name = course.select("td").get(3).text();
-				grade = course.select("td").get(8).text();
-				if(name.equals("课程名称"))
+			for(Element course:lesson){
+				int index = lesson.indexOf(course);
+				if( index < 2)
 					continue;
-				try {
-					jGrades.put(name, grade);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				else if(index % 2 == 0){
+					lessonNum = course.select("td").get(
+							(index==2 || index==6) ? 1 : 0).text();
+					for(int i = 0;i < 7;i++){
+						courseName[i] = course.select("td")
+								.get(i + ((index==2 || index==6) ? 2 : 1))
+								.text();
+						courses.put(courseName[i]);
+					}
+					try {
+						lessons.put(lessonNum, courses);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return null;
+					}
 				}
+				
 			}
-			//jGrades.put(grades);
-			try {
-				jMain.put("GRADE", jGrades);
-				result = jMain.toString();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return result;
+			return lessons.toString();
 		}
 
 		@Override
 		protected void setSpecialParams(HashMap<String, String> params) {
 			// TODO Auto-generated method stub
-			params.put("ddlXN",user.getxNStr());//学年
-			params.put("ddlXQ",user.getxQStr());//学期
-			params.put("Button1","按学期查询");//统一改为按学期查询，因为学期栏不填，同样可以完成按学年查询
+			params.put("xnd",mCourseQueryInfo.getXnd());//学年
+			params.put("xqd",mCourseQueryInfo.getXqd());//学期
+			params.put("__EVENTTARGET","xqd");
+			params.put("__EVENTARGUMENT","");
 		}
 		
 	}
