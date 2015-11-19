@@ -25,6 +25,7 @@ public abstract class InfoQueryTemplate {
 	
 	public String doQuery(){
 		String reply = getReply(mNumber, mName, mCookie, mFuncId, mUrl);
+		System.out.println(reply);
 		return parseReply(reply);
 	}
 	

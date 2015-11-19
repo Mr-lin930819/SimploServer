@@ -41,13 +41,14 @@ public class QueryCourseServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		String result;
 		response.setCharacterEncoding("gb2312");
-		courseQueryInfo.setName(request.getParameter("number"));
+		courseQueryInfo.setNumber(request.getParameter("number"));
 		courseQueryInfo.setName(request.getParameter("name"));
 		courseQueryInfo.setCookie(request.getParameter("cookie"));
 		courseQueryInfo.setXnd(request.getParameter("xn"));
 		courseQueryInfo.setXqd(request.getParameter("xq"));
 		
 		result = new CourseQuery(courseQueryInfo,"N121603").doQuery();
+		System.out.print(result);
 		response.getWriter().append(result);
 	}
 	
@@ -106,11 +107,11 @@ public class QueryCourseServlet extends HttpServlet {
 			Elements lesson;
 			String lessonNum;
 			String[] courseName = new String[7];
-			JSONArray courses = new JSONArray();
+			JSONArray courses = null;
 			JSONObject lessons = new JSONObject();
 			
 			doc = Jsoup.parse(reply);
-			table = doc.select("table[id=Tabel1]").first();
+			table = doc.select("table[id=Table1]").first();
 			lesson = table.select("tbody").select("tr");
 			
 			for(Element course:lesson){
@@ -119,10 +120,11 @@ public class QueryCourseServlet extends HttpServlet {
 					continue;
 				else if(index % 2 == 0){
 					lessonNum = course.select("td").get(
-							(index==2 || index==6) ? 1 : 0).text();
+							(index==2 || index==6 || index==10) ? 1 : 0).text();
+					courses = new JSONArray();
 					for(int i = 0;i < 7;i++){
 						courseName[i] = course.select("td")
-								.get(i + ((index==2 || index==6) ? 2 : 1))
+								.get(i + ((index==2 || index==6 || index==10) ? 2 : 1))
 								.text();
 						courses.put(courseName[i]);
 					}
