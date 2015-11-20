@@ -11,7 +11,18 @@ import thesis.httpMethod.NetworkManager;
 public abstract class InfoQueryTemplate {
 	
 	private String mNumber,mName,mCookie,mFuncId,mUrl;
+	boolean mIsPost;
 	private InfoQueryTemplate() {
+	}
+	
+	public InfoQueryTemplate(String number,String name,String cookie,String funcId,String url,boolean isPost) {
+		// TODO Auto-generated constructor stub
+		mNumber = number;
+		mName	= name;
+		mCookie = cookie;
+		mFuncId = funcId;
+		mUrl	= url;
+		mIsPost = isPost;
 	}
 	
 	public InfoQueryTemplate(String number,String name,String cookie,String funcId,String url) {
@@ -21,11 +32,12 @@ public abstract class InfoQueryTemplate {
 		mCookie = cookie;
 		mFuncId = funcId;
 		mUrl	= url;
+		mIsPost = true;
 	}
 	
 	public String doQuery(){
 		String reply = getReply(mNumber, mName, mCookie, mFuncId, mUrl);
-		System.out.println(reply);
+		//System.out.println(reply);
 		return parseReply(reply);
 	}
 	
@@ -57,6 +69,10 @@ public abstract class InfoQueryTemplate {
 		nm.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
 		nm.addSpecialHeader("Referer",refererUrl);
 		reply = nm.sendGet(newMainUrl, "");
+		//如果仅仅是get请求，那么可以直接返回网页内容
+		if(!mIsPost)
+			return reply;
+		
 //		Matcher newVSmatcher = Pattern.compile("__VIEWSTATE\" value=\"([^>]*)\" />").matcher(reply);
 //		if(newVSmatcher.find())
 //			updatedViewState = newVSmatcher.group().replaceAll("+", "%2B");
