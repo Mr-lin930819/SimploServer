@@ -34,14 +34,12 @@ public class QueryGradeServlet extends HttpServlet {
      */
     public QueryGradeServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.setCharacterEncoding("gb2312");
 		String resultPage = null,jsonText = null;
 		SearchInfo searchInfo = new SearchInfo(){
@@ -63,7 +61,6 @@ public class QueryGradeServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	
@@ -166,7 +163,6 @@ public class QueryGradeServlet extends HttpServlet {
 			try {
 				jGrades.put(name, grade);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -175,7 +171,6 @@ public class QueryGradeServlet extends HttpServlet {
 			jMain.put("GRADE", jGrades);
 			result = jMain.toString();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;

@@ -32,7 +32,6 @@ public class QueryCETServlet extends HttpServlet {
      */
     public QueryCETServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -61,7 +60,6 @@ public class QueryCETServlet extends HttpServlet {
 		}
 		@Override
 		protected String parseReply(String reply) {
-			// TODO Auto-generated method stub
 			Document doc;
 			Element table;
 			Elements exams;

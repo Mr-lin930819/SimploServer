@@ -31,14 +31,12 @@ public class QueryExamServlet extends HttpServlet {
      */
     public QueryExamServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.setCharacterEncoding("gb2312");
 		ExamQueryInfo queryInfo = new ExamQueryInfo(){
 			{
@@ -104,7 +102,6 @@ public class QueryExamServlet extends HttpServlet {
 
 		public ExamQuery(ExamQueryInfo queryInfo, String url) {
 			super(queryInfo.number, queryInfo.name, queryInfo.cookie, queryInfo.funcId, url);
-			// TODO Auto-generated constructor stub
 			mQueryInfo = queryInfo;
 		}
 
@@ -132,7 +129,6 @@ public class QueryExamServlet extends HttpServlet {
 				try {
 					retJson.put(exam.select("td").get(1).text(),examInfo);//课程名称
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}//课程名称, value)
 			}
@@ -141,7 +137,6 @@ public class QueryExamServlet extends HttpServlet {
 
 		@Override
 		protected void setSpecialParams(HashMap<String, String> params) {
-			// TODO Auto-generated method stub
 			params.put("__EVENTTARGET", "xnd");
 			params.put("__EVENTARGUMENT", "");
 			params.put("xnd", mQueryInfo.xn);

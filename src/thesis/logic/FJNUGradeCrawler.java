@@ -34,7 +34,6 @@ public class FJNUGradeCrawler {
 		try {
 			ret = new String(res,"gb2312");
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println(ret);
@@ -154,7 +153,6 @@ public class FJNUGradeCrawler {
     		try {
 				xmlFile.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	}
@@ -169,7 +167,6 @@ public class FJNUGradeCrawler {
 			output.write(newContent.toString());
 			output.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 //        ts<<"<?xml version=\"1.0\" encoding=\"utf-8\"?>"<<endl<<"<form";

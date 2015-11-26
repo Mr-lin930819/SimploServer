@@ -16,7 +16,6 @@ public abstract class InfoQueryTemplate {
 	}
 	
 	public InfoQueryTemplate(String number,String name,String cookie,String funcId,String url,boolean isPost) {
-		// TODO Auto-generated constructor stub
 		mNumber = number;
 		mName	= name;
 		mCookie = cookie;
@@ -26,7 +25,6 @@ public abstract class InfoQueryTemplate {
 	}
 	
 	public InfoQueryTemplate(String number,String name,String cookie,String funcId,String url) {
-		// TODO Auto-generated constructor stub
 		mNumber = number;
 		mName	= name;
 		mCookie = cookie;

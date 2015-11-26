@@ -21,14 +21,12 @@ public class TransUserInfoServlet extends HttpServlet {
      */
     public TransUserInfoServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		SearchInfo user = new SearchInfo();
 		user.setNumber(request.getParameter("username"));
 		user.setPassword(request.getParameter("password"));

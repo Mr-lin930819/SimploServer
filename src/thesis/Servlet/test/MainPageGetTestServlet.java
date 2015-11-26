@@ -29,14 +29,12 @@ public class MainPageGetTestServlet extends HttpServlet {
      */
     public MainPageGetTestServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		String mainUrl = "http://jwgl.fjnu.edu.cn/xs_main.aspx";
 		String resultPage = "";
 		response.setCharacterEncoding("gb2312");

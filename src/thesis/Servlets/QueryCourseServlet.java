@@ -1,7 +1,10 @@
 package thesis.Servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,14 +34,12 @@ public class QueryCourseServlet extends HttpServlet {
      */
     public QueryCourseServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		String result;
 		response.setCharacterEncoding("gb2312");
 		courseQueryInfo.setNumber(request.getParameter("number"));
@@ -48,7 +49,7 @@ public class QueryCourseServlet extends HttpServlet {
 		courseQueryInfo.setXqd(request.getParameter("xq"));
 		
 		result = new CourseQuery(courseQueryInfo,"N121603").doQuery();
-		System.out.print(result);
+		//System.out.print(result);
 		response.getWriter().append(result);
 	}
 	
@@ -101,7 +102,6 @@ public class QueryCourseServlet extends HttpServlet {
 
 		@Override
 		protected String parseReply(String reply) {
-			// TODO Auto-generated method stub
 			Document doc = null;
 			Element table;
 			Elements lesson;
@@ -126,16 +126,16 @@ public class QueryCourseServlet extends HttpServlet {
 						courseName[i] = course.select("td")
 								.get(i + ((index==2 || index==6 || index==10) ? 2 : 1))
 								.text();
-						courses.put(courseName[i]);
+						//TODO : 添加整理课程数据函数
+						courses.put(parseLessonContent(courseName[i]));
 					}
 					try {
 						lessons.put(lessonNum, courses);
 					} catch (JSONException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						return null;
 					}
-				}
+			 	}
 				
 			}
 			return lessons.toString();
@@ -143,13 +143,56 @@ public class QueryCourseServlet extends HttpServlet {
 
 		@Override
 		protected void setSpecialParams(HashMap<String, String> params) {
-			// TODO Auto-generated method stub
 			params.put("xnd",mCourseQueryInfo.getXnd());//学年
 			params.put("xqd",mCourseQueryInfo.getXqd());//学期
 			params.put("__EVENTTARGET","xqd");
 			params.put("__EVENTARGUMENT","");
 		}
 		
+	}
+	
+	private String parseLessonContent(String text){
+		ArrayList<String> dataCollection = null;
+		StringBuffer result = new StringBuffer();
+		if(text.equals("?") || text.equals(""))
+			return "";
+		else {
+			String []rawData = text.split(" ");
+			dataCollection = new ArrayList<String>();
+			for(int i=0; i<rawData.length;i++){
+				dataCollection.add(rawData[i]);
+			}
+		}
+		Pattern lessonTimePattern = Pattern.compile("第(.{1,2})-(.{1,2})周");
+		Pattern lessonOddEvenPattern = Pattern.compile("第(.{1,2})-(.{1,2})周(.)(.)周");
+		
+		for(String timeText:dataCollection) {
+			Matcher tempMatcher = lessonOddEvenPattern.matcher(timeText);
+			if(tempMatcher.find()){
+				int index = dataCollection.indexOf(timeText);
+				result.append(tempMatcher.group(4) + "周;");
+				result.append(dataCollection.get(index - 2) + ";");
+				result.append(dataCollection.get(index + 1) + ";");
+				if((index + 2) < dataCollection.size())
+					result.append(dataCollection.get(index + 2) + "$");
+				else
+					result.append("$");
+			} else {
+				tempMatcher = lessonTimePattern.matcher(timeText);
+				if(tempMatcher.find()) {
+					int index = dataCollection.indexOf(timeText);
+					result.append(tempMatcher.group(1) + "-" + tempMatcher.group(2) + "周;");
+					result.append(dataCollection.get(index - 2) + ";");
+					result.append(dataCollection.get(index + 1) + ";");
+					if((index + 2) < dataCollection.size())
+						result.append(dataCollection.get(index + 2) +"$");
+					else
+						result.append("$");
+				}
+			}
+		}
+		
+		return result.toString();
 	}
 
 }

@@ -24,14 +24,12 @@ public class CheckImgServlet extends HttpServlet {
      */
     public CheckImgServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.setCharacterEncoding("gb2312");
 //		System.out.println("Cookie Is <-->" + request.getParameter("cookie"));
 		byte [] responseData = getCheckImg(request.getParameter("cookie"));
@@ -42,7 +40,6 @@ public class CheckImgServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 	
@@ -69,10 +66,8 @@ public class CheckImgServlet extends HttpServlet {
  			retImg = new byte[in.available()];
  			in.read(retImg);
 		}catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
             try {

@@ -24,14 +24,12 @@ public class GetAvatorServlet extends HttpServlet {
      */
     public GetAvatorServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.setCharacterEncoding("gb2312");
 		byte[] data = getForTouxiang(request.getParameter("cookie"), request.getParameter("number"));
 		response.getOutputStream().write(data);
@@ -62,13 +60,10 @@ public class GetAvatorServlet extends HttpServlet {
  			System.out.println(in.available());
  			in.read(retImg);
 		}catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
             try {

@@ -48,14 +48,12 @@ public class MainPageTestServlet extends HttpServlet {
     public MainPageTestServlet() {
         super();
         nm = new NetworkManager();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.setCharacterEncoding("gb2312");
 		String resultPage = "",xmStr = "";
 		SearchInfo user = (SearchInfo)request.getAttribute("loginInfo");
@@ -282,7 +280,6 @@ public class MainPageTestServlet extends HttpServlet {
 			jMain.put("GRADE", jGrades);
 			result = jMain.toString(4);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;

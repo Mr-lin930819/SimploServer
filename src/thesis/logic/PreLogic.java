@@ -55,10 +55,8 @@ public class PreLogic {
 			ret = new byte[in.available()];
 			in.read(ret);
 		}catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
            try {

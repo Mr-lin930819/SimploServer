@@ -32,14 +32,12 @@ public class GradeOptionServlet extends HttpServlet {
      */
     public GradeOptionServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.setCharacterEncoding("gb2312");
 		String resultPage = null,jsonText = null;
 		resultPage = postForCondition(request.getParameter("number"),request.getParameter("xm"),
@@ -89,7 +87,6 @@ public class GradeOptionServlet extends HttpServlet {
 			body.put("ZY", zy_span.text());//רҵ
 			body.put("XY", xy_span.text());//ѧԺ
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	return body.toString();

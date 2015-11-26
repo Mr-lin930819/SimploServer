@@ -21,14 +21,12 @@ public class TestGetCookieServlet extends HttpServlet {
      */
     public TestGetCookieServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.setCharacterEncoding("gb2312");
 		HttpManager.clearSpecialHeader();
 		HttpManager.addSpecialHeader("Host", "jwgl.fjnu.edu.cn");

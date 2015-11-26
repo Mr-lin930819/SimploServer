@@ -15,7 +15,6 @@ public class JsonTool {
 			}
 			retJson.put(nodeName, dataJson);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return retJson;

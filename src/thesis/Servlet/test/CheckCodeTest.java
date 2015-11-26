@@ -29,14 +29,12 @@ public class CheckCodeTest extends HttpServlet {
      */
     public CheckCodeTest() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		byte[] img = null;
 		response.setCharacterEncoding("gb2312");
 		//final String loginUrlStr = "http://jwgl.fjnu.edu.cn/default2.aspx";
@@ -61,10 +59,8 @@ public class CheckCodeTest extends HttpServlet {
  			img = new byte[in.available()];
  			in.read(img);
 		}catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
             try {
