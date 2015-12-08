@@ -2,6 +2,8 @@ package thesis.Servlets;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -141,6 +143,15 @@ public class QueryExamServlet extends HttpServlet {
 			params.put("__EVENTARGUMENT", "");
 			params.put("xnd", mQueryInfo.xn);
 			params.put("xqd", mQueryInfo.xq);
+		}
+
+		@Override
+		protected String handleError(String reply) {
+			Matcher matcher = Pattern.compile("alert('(.*)'").matcher(reply);
+			if(matcher.find()){
+				return "CODE2";
+			}
+			return "";
 		}
 		
 	}

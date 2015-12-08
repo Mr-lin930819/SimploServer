@@ -2,6 +2,8 @@ package thesis.Servlets;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -65,6 +67,11 @@ public class QueryCETServlet extends HttpServlet {
 			Elements exams;
 			JSONArray examInfo = null;
 			JSONObject retJson = new JSONObject();
+			Matcher matcher = Pattern.compile("alert\\((.*)\\)").matcher(reply);
+			if(matcher.find()){
+				return "CODE2";
+			}
+			
 			doc = Jsoup.parse(reply);
 			table = doc.select("table[id=DataGrid1]").first();
 			exams = table.select("tbody").first().select("tr");
@@ -96,6 +103,14 @@ public class QueryCETServlet extends HttpServlet {
 		@Override
 		protected void setSpecialParams(HashMap<String, String> params) {
 			
+		}
+		@Override
+		protected String handleError(String reply) {
+			Matcher matcher = Pattern.compile("alert('(.*)'").matcher(reply);
+			if(matcher.find()){
+				return "CODE2";
+			}
+			return "";
 		}
 		
 	}

@@ -22,27 +22,24 @@ form#mainForm {
 <% 
 	NetworkManager nm = new NetworkManager();
 	//NetworkManager nm = (NetworkManager)request.getAttribute("nm");
-	String viewState = PreLogic.getOne(nm);
-	String cookie = nm.cookies.get("http://jwgl.fjnu.edu.cn/default2.aspx");
-	String imgSrc = "/SimploServer/CheckCodeTest?cookie=" + cookie;
+	//String viewState = PreLogic.getOne(nm);
+	//String cookie = nm.cookies.get("http://jwgl.fjnu.edu.cn/default2.aspx");
+	//String imgSrc = "/SimploServer/CheckCodeTest?cookie=" + cookie;
 %>
-	<form action="/SimploServer/TransUserInfoServlet" method="get" id="mainForm">
-			<input type="hidden" name="viewState" value=<%= viewState%>>
-			<input type="hidden" name="cookie" value=<%=cookie %>>
+	<form action="/SimploServer/OneKeyCommentServlet" method="get" id="mainForm">
 			<input type="hidden" name="xnStr" value="2014-2015">
 			<input type="hidden" name="xqStr" value="">
 		<p>
-			USERNAME:<input type="text" name="username">
+			USERNAME:<input type="text" name="name">
 		</p>
 		<p>
-			PASSWORD:<input type="text" name="password">
+			PASSWORD:<input type="text" name="number">
 		</p>
 		<p>
-			CHECKCODE:<input type="text" name="checkCode">
+			CHECKCODE:<input type="text" name="cookie">
 		</p>
 		
 	<!--  <img src="http://jwgl.fjnu.edu.cn/CheckCode.aspx"> -->
-		<img src=<%=imgSrc %>>
 		<input type="submit" value="Post测试">
 	</form>
 	<br>

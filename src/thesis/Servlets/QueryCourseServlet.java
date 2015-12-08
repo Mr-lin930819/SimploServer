@@ -148,6 +148,15 @@ public class QueryCourseServlet extends HttpServlet {
 			params.put("__EVENTTARGET","xqd");
 			params.put("__EVENTARGUMENT","");
 		}
+
+		@Override
+		protected String handleError(String reply) {
+			Matcher matcher = Pattern.compile("alert('(.*)'").matcher(reply);
+			if(matcher.find()){
+				return "CODE2";
+			}
+			return "";
+		}
 		
 	}
 	

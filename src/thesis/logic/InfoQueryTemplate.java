@@ -1,10 +1,14 @@
 package thesis.logic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import thesis.httpMethod.NetworkManager;
 
@@ -36,6 +40,12 @@ public abstract class InfoQueryTemplate {
 	public String doQuery(){
 		String reply = getReply(mNumber, mName, mCookie, mFuncId, mUrl);
 		//System.out.println(reply);
+		//若返回空串则表示请求过程出现异常
+		if(reply.equals("")){
+			return handleError(reply);
+		} else if(reply.equals("N12141")) {//返回"N12141"为特殊情况，进行一键评价
+			return "";
+		}
 		return parseReply(reply);
 	}
 	
@@ -63,6 +73,13 @@ public abstract class InfoQueryTemplate {
 //		if(xmMatcher.find())
 //	       	xmStr = xmMatcher.group(1);
 		String newMainUrl = url + "?xh="+number+"&xm="+name+"&gnmkdm="+funcId;//gnmkdm="N121618";表示成绩查询的编号
+		ArrayList<String> list = null;
+		if(funcId.equals("N12141"))//教学评价
+		{
+			reply = nm.sendGet(refererUrl, "");
+			newMainUrl = parseRef(reply);
+			list = parsePJKC(reply);
+		}
 		
 		nm.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
 		nm.addSpecialHeader("Referer",refererUrl);
@@ -76,6 +93,10 @@ public abstract class InfoQueryTemplate {
 //			updatedViewState = newVSmatcher.group().replaceAll("+", "%2B");
 		doc = Jsoup.parse(reply);
 		form = doc.select("input[name=__VIEWSTATE]").first();
+		//如果寻找__VIEWSTATE出错，则表明提交的参数错误或网页的内容出现变动
+		if(form == null){
+			return "";
+		}
 		updatedViewState = form.attr("value");
 		updatedViewState =  updatedViewState.replaceAll("[+]", "%2B");
 		/**
@@ -101,10 +122,68 @@ public abstract class InfoQueryTemplate {
 		nm.addSpecialHeader("User-Agent","Mozilla/5.0");
 		nm.addSpecialHeader("Cookie", cookie);
 		
-		reply = nm.sendPost(newMainUrl, params);
+		if(funcId.equals("N12141")){//教学评价
+			String tempViewState = updatedViewState;
+			for(String s:list){
+				params.remove("pjkc");
+				params.put("pjkc",s);
+				params.put("TextBox1", "0");
+				params.put("txt1", "");
+				params.put("pjxx","");
+				params.remove("__VIEWSTATE");
+				params.put("__VIEWSTATE",tempViewState);
+				params.remove("Button2");
+				params.remove("Button1");
+				params.put("Button1", "保  存");
+				reply = nm.sendPost(newMainUrl, params);
+				tempViewState = parseViewState(reply);
+			}
+			params.remove("Button1");
+			params.remove("Button2");
+			params.put("Button2", " 提  交 ");
+			nm.sendPost(newMainUrl, params);
+			reply = "N12141";
+		} else {
+			reply = nm.sendPost(newMainUrl, params);
+		}
 		return reply;
-		
 	}
+	
+	private String parseRef(String reply){
+		Document nodes = Jsoup.parse(reply);
+		Element ele = nodes.select("li[class=top]").get(2).select("ul[class=sub]").select("li").first();
+		String refUrl = ele.select("a").attr("href");
+		System.out.println("http://jwgl.fjnu.edu.cn/" + refUrl);
+		return "http://jwgl.fjnu.edu.cn/" + refUrl;
+	}
+	
+	private ArrayList<String> parsePJKC(String reply){
+		Document nodes = Jsoup.parse(reply);
+		Elements eles = nodes.select("li[class=top]").get(2).select("ul[class=sub]").select("li");
+		ArrayList<String> kcs = new ArrayList<String>();
+		for(Element e:eles){
+			String ref = e.select("a").attr("href");
+			Matcher matcher = Pattern.compile("xkkh=(.*)&xh").matcher(ref);
+			if(matcher.find()){
+				kcs.add(matcher.group(1));
+			}
+		}
+		return kcs;
+	}
+	
+	private String parseViewState(String reply){
+		Document doc = Jsoup.parse(reply);
+		Element form = doc.select("input[name=__VIEWSTATE]").first();
+		//如果寻找__VIEWSTATE出错，则表明提交的参数错误或网页的内容出现变动
+		if(form == null){
+			return "";
+		}
+		String retViewState = form.attr("value");
+		retViewState =  retViewState.replaceAll("[+]", "%2B");
+		return retViewState;
+	}
+	
+	protected abstract String handleError(String reply);
 	
 	protected abstract String parseReply(String reply);
 	

@@ -207,5 +207,9 @@ public class NetworkManager {
     	specialHeader.clear();
     }
     
+    public void removeSpecialHeader(String key){
+    	specialHeader.remove(key);
+    }
+    
 
 }
