@@ -19,8 +19,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import thesis.JavaBean.QueryInfo;
 import thesis.JavaBean.SearchInfo;
 import thesis.httpMethod.NetworkManager;
+import thesis.CommonInfo.QueryDefine;
 
 /**
  * Servlet implementation class QueryGradeServlet
@@ -119,7 +121,7 @@ public class QueryGradeServlet extends HttpServlet {
 		params.put("Button1","按学期查询");//统一改为按学期查询，因为学期栏不填，同样可以完成按学年查询
 		
 		refererUrl = "http://jwgl.fjnu.edu.cn/xscj_gc.aspx?xh=" + 
-				user.getNumber() + "&xm="+xmStr+"&gnmkdm="+"N121618";
+				user.getNumber() + "&xm="+xmStr+"&gnmkdm="+QueryDefine.QUERY_GRADE_CODE;
 		nm.clearSpecialHeader();
 		nm.addSpecialHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 		nm.addSpecialHeader("Accept-Encoding","gzip,deflate");
