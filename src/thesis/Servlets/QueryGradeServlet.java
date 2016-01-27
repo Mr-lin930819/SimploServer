@@ -22,7 +22,9 @@ import org.jsoup.select.Elements;
 import thesis.JavaBean.QueryInfo;
 import thesis.JavaBean.SearchInfo;
 import thesis.httpMethod.NetworkManager;
-import thesis.CommonInfo.QueryDefine;
+import thesis.CommonInfo.PostParamKey;
+import thesis.CommonInfo.QueryCode;
+import thesis.CommonInfo.QueryUrl;
 
 /**
  * Servlet implementation class QueryGradeServlet
@@ -93,8 +95,9 @@ public class QueryGradeServlet extends HttpServlet {
 //		if(xmMatcher.find())
 //	       	xmStr = xmMatcher.group(1);
 		xmStr = user.getName();
-		String newMainUrl = "http://jwgl.fjnu.edu.cn/xscj_gc.aspx?xh="+user.getNumber()+"&xm="+xmStr+"&gnmkdm="+"N121618";//gnmkdm="N121618";表示成绩查询的编号
-		
+		//String newMainUrl = "http://jwgl.fjnu.edu.cn/xscj_gc.aspx?xh="+user.getNumber()+"&xm="+xmStr+"&gnmkdm="+"N121618";//gnmkdm="N121618";表示成绩查询的编号
+		String newMainUrl = QueryUrl.GRADE_QUERY + 
+				"?xh=" + user.getNumber()+"&xm="+xmStr+"&gnmkdm="+QueryCode.QUERY_GRADE;//gnmkdm="N121618";表示成绩查询的编号
 		nm.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
 		nm.addSpecialHeader("Referer",refererUrl);
 		reply = nm.sendGet(newMainUrl, "");
@@ -114,14 +117,15 @@ public class QueryGradeServlet extends HttpServlet {
 //		params.put("__EVENTTARGET","");
 		params.put("__VIEWSTATE",updatedViewState);
 		//params.put("hidLanguage","");
-		params.put("ddlXN",user.getxNStr());//学年
-		params.put("ddlXQ",user.getxQStr());//学期
+		params.put(PostParamKey.DDL_XN,user.getxNStr());//学年
+		params.put(PostParamKey.DDL_XQ,user.getxQStr());//学期
 		//params.put("btnCx","+查++询+");//按学期或者按照学年查询
 		//params.put("Button5","按学年查询");
-		params.put("Button1","按学期查询");//统一改为按学期查询，因为学期栏不填，同样可以完成按学年查询
+		//params.put("Button1","按学期查询");//统一改为按学期查询，因为学期栏不填，同样可以完成按学年查询
+		params.put(PostParamKey.CX_BTN, PostParamKey.CX_BTN_VAL);
 		
-		refererUrl = "http://jwgl.fjnu.edu.cn/xscj_gc.aspx?xh=" + 
-				user.getNumber() + "&xm="+xmStr+"&gnmkdm="+QueryDefine.QUERY_GRADE_CODE;
+		refererUrl = QueryUrl.GRADE_QUERY +"?xh=" + 
+				user.getNumber() + "&xm="+xmStr+"&gnmkdm="+QueryCode.QUERY_GRADE;
 		nm.clearSpecialHeader();
 		nm.addSpecialHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 		nm.addSpecialHeader("Accept-Encoding","gzip,deflate");
@@ -157,9 +161,11 @@ public class QueryGradeServlet extends HttpServlet {
 		table = doc.select("table[class=datelist]").first();
 		courses = table.select("tbody").select("tr");
 		
+		System.out.println(content);
+		
 		for(Element course:courses){
 			name = course.select("td").get(3).text();
-			grade = course.select("td").get(8).text();
+			grade = course.select("td").get(11).text();
 			if(name.equals("课程名称"))
 				continue;
 			try {

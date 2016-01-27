@@ -1,8 +1,12 @@
 package thesis.Servlets;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,6 +22,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import thesis.CommonInfo.QueryCode;
+import thesis.CommonInfo.QueryUrl;
 import thesis.httpMethod.NetworkManager;
 
 /**
@@ -40,9 +46,10 @@ public class GradeOptionServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("gb2312");
 		String resultPage = null,jsonText = null;
+		System.out.println(request.getParameter("number") + "  " + request.getParameter("xm") +
+				" " + request.getParameter("cookie"));
 		resultPage = postForCondition(request.getParameter("number"),request.getParameter("xm"),
 				request.getParameter("cookie"));
-		
 		jsonText = parseReply2Json(resultPage);
 		response.getWriter().append(jsonText);
 	}
@@ -52,13 +59,16 @@ public class GradeOptionServlet extends HttpServlet {
     	String reply;
     	
     	String referUrl = "http://jwgl.fjnu.edu.cn/xs_main.aspx?xh=" + number;
-    	String mainUrl = "http://jwgl.fjnu.edu.cn/xscj_gc.aspx?xh="+number+"&xm="+xm+"&gnmkdm="+"N121618";//gnmkdm="N121618";
+    	String mainUrl = QueryUrl.GRADE_OPTION;
+//    	+ "?xh=" + number+"&xm="+"林炜"+
+//    			"&gnmkdm="+QueryCode.QUERY_GRADE_CODE;		//gnmkdm="N121618";
+    	String mainParm = "xh=" + number+"&xm="+ xm + "&gnmkdm="+QueryCode.QUERY_GRADE;		//gnmkdm="N121618";
     	
 		nm.clearSpecialHeader();
 		nm.addSpecialHeader("Cookie", /*HttpManager.*/cookie);
 		nm.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
 		nm.addSpecialHeader("Referer",referUrl);
-		reply = nm.sendGet(mainUrl, "");
+		reply = nm.sendGet(mainUrl, mainParm);
 		return reply;
 	}
 	
@@ -72,10 +82,13 @@ public class GradeOptionServlet extends HttpServlet {
     	Element main_div,select,zy_span/*专业标签*/,xy_span/*学院*/;
 		Elements options;
 		List<String> data = new ArrayList<String>();
-    	main_div = Jsoup.parse(reply).select("div[id=divcxtj]").first();
-    	zy_span = main_div.select("span[id=Label7]").first();
-    	xy_span = main_div.select("span[id=Label6]").first();
-    	select = main_div.select("select[id=ddlXN]").first();
+    	Matcher majorMatcher = Pattern.compile("专业：(.{0,30})</td>").matcher(reply),
+    			collegeMatcher = Pattern.compile("学院：(.{0,30})</td>").matcher(reply);
+		//main_div = Jsoup.parse(reply).select("div[id=divcxtj]").first();
+    	//zy_span = main_div.select("span[id=Label7]").first();
+    	//xy_span = main_div.select("span[id=Label6]").first();
+//		System.out.println(reply);
+    	select = Jsoup.parse(reply).select("select[name=ddlxn]").first();
     	options = select.select("option");
     	for(Element elem:options){
     		data.add(elem.val());
@@ -84,8 +97,17 @@ public class GradeOptionServlet extends HttpServlet {
     	JSONObject body = new JSONObject();
     	try {
 			body.put("CXTJ", data);//查询条件（学年）
-			body.put("ZY", zy_span.text());//专业
-			body.put("XY", xy_span.text());//学院
+			//body.put("ZY", zy_span.text());//专业
+			//body.put("XY", xy_span.text());//学院
+			if(majorMatcher.find())
+				body.put("ZY", majorMatcher.group(1));
+			else
+				body.put("ZY", "暂无专业信息");
+			if(collegeMatcher.find())
+				body.put("XY", collegeMatcher.group(1));//学院
+			else
+				body.put("XY", "暂无学院信息");
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

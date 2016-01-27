@@ -121,7 +121,7 @@ public class TryLoginServlet extends HttpServlet {
 			return LoginRstCode.PASSWD_ERROR;
         //Matcher xmMatcher = Pattern.compile("xm=(.{0,12})&gnmkdm=N121618")
 		//		.matcher(temp);
-		Matcher xmMatcher = Pattern.compile("<span id=\"xhxm\">(.{0,12})</span>").matcher(temp);
+		Matcher xmMatcher = Pattern.compile("<span id=\"xhxm\">(.{0,12})ͬѧ</span>").matcher(temp);
 		
 		if(xmMatcher.find()){
 			xmStr = xmMatcher.group(1);
