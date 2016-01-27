@@ -24,6 +24,12 @@ import thesis.httpMethod.NetworkManager;
 public class TryLoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String xmStr = "";
+	
+	enum LoginRstCode{
+		SUCCESS,
+		CHECKCODE_ERROR,
+		PASSWD_ERROR
+	};
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -50,7 +56,7 @@ public class TryLoginServlet extends HttpServlet {
 		JSONObject main = new JSONObject();
 		JSONObject body = new JSONObject();
 		try{
-			if(tryLogin(loginInfo) == true){
+			if(tryLogin(loginInfo) == LoginRstCode.SUCCESS){
 				main.put("xm", xmStr);
 				main.put("can", "1");
 
@@ -73,7 +79,7 @@ public class TryLoginServlet extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private boolean tryLogin(Map<String,String> loginInfo){
+	private LoginRstCode tryLogin(Map<String,String> loginInfo){
 		NetworkManager nm = new NetworkManager();
 		HashMap<String,String> params = new HashMap<String,String>();
     	String reply = "",nameStr = "";
@@ -112,17 +118,17 @@ public class TryLoginServlet extends HttpServlet {
         System.out.println(nm.sendPost("http://jwgl.fjnu.edu.cn/default2.aspx", params));
         String temp = nm.sendGet("http://jwgl.fjnu.edu.cn/xs_main.aspx?xh="+ loginInfo.get("number"), "");
 		if(temp == null)
-			return false;
-        Matcher xmMatcher = Pattern.compile("xm=(.{0,12})&gnmkdm=N121618")
-				.matcher(temp);
-		
+			return LoginRstCode.PASSWD_ERROR;
+        //Matcher xmMatcher = Pattern.compile("xm=(.{0,12})&gnmkdm=N121618")
+		//		.matcher(temp);
+		Matcher xmMatcher = Pattern.compile("<span id=\"xhxm\">(.{0,12})</span>").matcher(temp);
 		
 		if(xmMatcher.find()){
 			xmStr = xmMatcher.group(1);
 			System.out.print("NNNNNNNNNNNNNNAME--" + xmStr);
-			return true;
+			return LoginRstCode.SUCCESS;
 		}else{
-			return false;
+			return LoginRstCode.PASSWD_ERROR;
 		}
 		
 //        if(nm.sendGet("http://jwgl.fjnu.edu.cn/xs_main.aspx?xh=" + loginInfo.get("number"), "") != null){
