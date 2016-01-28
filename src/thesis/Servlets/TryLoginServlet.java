@@ -1,6 +1,8 @@
 package thesis.Servlets;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -12,9 +14,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import thesis.DBOperation.HBUtil;
+import thesis.JavaBean.UserInfoEntity;
+import thesis.Main.Main;
 import thesis.httpMethod.NetworkManager;
 
 /**
@@ -43,6 +54,25 @@ public class TryLoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("gb2312");
+
+//        HBUtil hbUtil = HBUtil.getInstance();
+        Session session = null;
+        System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+    	session = Main.getSession();
+        session.beginTransaction();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+        UserInfoEntity userInfo = new UserInfoEntity(){
+            {
+                setStuNumber(request.getParameter("number"));
+                setStuPassword(request.getParameter("password"));
+                setStoredCookie(request.getParameter("cookie"));
+                setGenDate(java.sql.Date.valueOf(sdf.format(new Date())));
+            }
+        };
+        session.save(userInfo);
+        session.getTransaction().commit();
+        session.close();
+
 		HashMap<String, String> loginInfo = new HashMap<String,String>(){
 			{
 				put("number",request.getParameter("number"));
