@@ -20,6 +20,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import thesis.CommonInfo.QueryCode;
+import thesis.CommonInfo.QueryUrl;
 import thesis.logic.InfoQueryTemplate;
 
 /**
@@ -48,7 +50,7 @@ public class QueryCourseServlet extends HttpServlet {
 		courseQueryInfo.setXnd(request.getParameter("xn"));
 		courseQueryInfo.setXqd(request.getParameter("xq"));
 		
-		result = new CourseQuery(courseQueryInfo,"N121603").doQuery();
+		result = new CourseQuery(courseQueryInfo,QueryCode.QUERY_COURSE).doQuery();
 		//System.out.print(result);
 		response.getWriter().append(result);
 	}
@@ -96,7 +98,7 @@ public class QueryCourseServlet extends HttpServlet {
 		
 		private CourseQueryInfo mCourseQueryInfo = null;
 		public CourseQuery(CourseQueryInfo info, String funcId) {
-			super(info.number, info.name, info.cookie, funcId,"http://jwgl.fjnu.edu.cn/xskbcx.aspx");
+			super(info.number, info.name, info.cookie, funcId,QueryUrl.COURSE_QUERY);
 			mCourseQueryInfo = info;
 		}
 

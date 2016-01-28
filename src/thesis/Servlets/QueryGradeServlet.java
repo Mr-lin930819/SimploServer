@@ -19,7 +19,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import thesis.JavaBean.QueryInfo;
+//import thesis.JavaBean.QueryInfo;
 import thesis.JavaBean.SearchInfo;
 import thesis.httpMethod.NetworkManager;
 import thesis.CommonInfo.PostParamKey;
