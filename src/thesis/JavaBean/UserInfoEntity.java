@@ -19,8 +19,8 @@ public class UserInfoEntity {
     private String stuName;
 
     @Id
-    @GeneratedValue(generator = "paymentableGenerator")
-    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
+    @GeneratedValue(generator = "UuidGenerator")
+    @GenericGenerator(name = "UuidGenerator", strategy = "uuid")
     
     public String getOpenAppUserId() {
         return openAppUserId;

@@ -48,23 +48,7 @@ public class TryLoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("gb2312");
-
-//        HBUtil hbUtil = HBUtil.getInstance();
-        Session session = null;
-        session = HBUtil.getSession();
-        session.beginTransaction();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-        UserInfoEntity userInfo = new UserInfoEntity();
-        userInfo.setStuNumber(request.getParameter("number"));
-        userInfo.setStuPassword(request.getParameter("password"));
-        userInfo.setStoredCookie(request.getParameter("cookie"));
-        userInfo.setStuName("你好");
-        userInfo.setGenDate(java.sql.Date.valueOf(sdf.format(new Date())));
         
-        session.save(userInfo);
-        session.getTransaction().commit();
-        session.close();
-
 		HashMap<String, String> loginInfo = new HashMap<String,String>(){
 			{
 				put("number",request.getParameter("number"));
@@ -78,13 +62,17 @@ public class TryLoginServlet extends HttpServlet {
 		JSONObject main = new JSONObject();
 		JSONObject body = new JSONObject();
 		try{
-			if(tryLogin(loginInfo) == LoginRstCode.SUCCESS){
+			LoginRstCode rstCode = tryLogin(loginInfo);
+			if( rstCode == LoginRstCode.SUCCESS){
 				main.put("xm", xmStr);
-				main.put("can", "1");
-
+				main.put("lgRstCode", "1");
+				saveUser(xmStr, loginInfo);
+			}else if(rstCode == LoginRstCode.CHECKCODE_ERROR){
+				main.put("xm", "");
+				main.put("lgRstCode", "2");
 			}else{
 				main.put("xm", "");
-				main.put("can", "0");
+				main.put("lgRstCode", "0");
 			}
 			body.put("TRY", main);
 			System.out.println("\n" + body.toString());
@@ -104,7 +92,9 @@ public class TryLoginServlet extends HttpServlet {
 	private LoginRstCode tryLogin(Map<String,String> loginInfo){
 		NetworkManager nm = new NetworkManager();
 		HashMap<String,String> params = new HashMap<String,String>();
-    	String reply = "",nameStr = "";
+    	String reply = "",nameStr = "", lgRstPage, stuMainPage;
+        Matcher codeVaileMatcher, xmMatcher;
+
 //   	String xmStr = "",gnmkdmStr = "";
     	/**
     	 *  第1步，get登录页面
@@ -135,19 +125,23 @@ public class TryLoginServlet extends HttpServlet {
         nm.addSpecialHeader("Accept-Encoding","gzip, deflate");
         nm.addSpecialHeader("Accept-Language","zh-CN,en,*");
         
-        //nm.sendPost("http://jwgl.fjnu.edu.cn/default2.aspx", params);
+        lgRstPage = nm.sendPost("http://jwgl.fjnu.edu.cn/default2.aspx", params);
+        //System.out.println(nm.sendPost("http://jwgl.fjnu.edu.cn/default2.aspx", params));
+        stuMainPage = nm.sendGet("http://jwgl.fjnu.edu.cn/xs_main.aspx?xh="+ loginInfo.get("number"), "");
+		
+        System.out.println(stuMainPage);
         
-        System.out.println(nm.sendPost("http://jwgl.fjnu.edu.cn/default2.aspx", params));
-        String temp = nm.sendGet("http://jwgl.fjnu.edu.cn/xs_main.aspx?xh="+ loginInfo.get("number"), "");
-		if(temp == null)
+        if(lgRstPage == null || stuMainPage == null)
 			return LoginRstCode.PASSWD_ERROR;
         //Matcher xmMatcher = Pattern.compile("xm=(.{0,12})&gnmkdm=N121618")
 		//		.matcher(temp);
-		Matcher xmMatcher = Pattern.compile("<span id=\"xhxm\">(.{0,12})同学</span>").matcher(temp);
-		
+		codeVaileMatcher = Pattern.compile("验证码不正确").matcher(lgRstPage);
+        if(codeVaileMatcher.find()) {    //验证码不正确
+            return LoginRstCode.CHECKCODE_ERROR;
+        }
+        xmMatcher = Pattern.compile("<span id=\"xhxm\">(.{0,12})同学</span>").matcher(stuMainPage);
 		if(xmMatcher.find()){
 			xmStr = xmMatcher.group(1);
-			System.out.print("NNNNNNNNNNNNNNAME--" + xmStr);
 			return LoginRstCode.SUCCESS;
 		}else{
 			return LoginRstCode.PASSWD_ERROR;
@@ -158,6 +152,24 @@ public class TryLoginServlet extends HttpServlet {
 //        }else{
 //        	return false;
 //        }
+	}
+	
+	private void saveUser(String name, HashMap<String, String>loginInfo){
+		Session session = HBUtil.getSession();
+		
+        session.beginTransaction();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
+        UserInfoEntity userInfo = new UserInfoEntity();
+        userInfo.setStuNumber(loginInfo.get("number"));
+        userInfo.setStuPassword(loginInfo.get("password"));
+        userInfo.setStoredCookie(loginInfo.get("cookie"));
+        userInfo.setStuName(name);
+        userInfo.setGenDate(java.sql.Date.valueOf(sdf.format(new Date())));
+        
+        session.save(userInfo);
+        session.getTransaction().commit();
+        session.close();
+
 	}
 
 }
