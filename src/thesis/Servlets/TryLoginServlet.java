@@ -66,13 +66,15 @@ public class TryLoginServlet extends HttpServlet {
 			if( rstCode == LoginRstCode.SUCCESS){
 				main.put("xm", xmStr);
 				main.put("lgRstCode", "1");
-				saveUser(xmStr, loginInfo);
+				main.put("openAppId", saveUser(xmStr, loginInfo));
 			}else if(rstCode == LoginRstCode.CHECKCODE_ERROR){
 				main.put("xm", "");
 				main.put("lgRstCode", "2");
+                main.put("openAppId", "");
 			}else{
 				main.put("xm", "");
 				main.put("lgRstCode", "0");
+                main.put("openAppId", "");
 			}
 			body.put("TRY", main);
 			System.out.println("\n" + body.toString());
@@ -154,9 +156,9 @@ public class TryLoginServlet extends HttpServlet {
 //        }
 	}
 	
-	private void saveUser(String name, HashMap<String, String>loginInfo){
+	private String saveUser(String name, HashMap<String, String>loginInfo){
 		Session session = HBUtil.getSession();
-		
+		String uuid;
         session.beginTransaction();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
         UserInfoEntity userInfo = new UserInfoEntity();
@@ -167,9 +169,10 @@ public class TryLoginServlet extends HttpServlet {
         userInfo.setGenDate(java.sql.Date.valueOf(sdf.format(new Date())));
         
         session.save(userInfo);
+        uuid = userInfo.getOpenAppUserId();
         session.getTransaction().commit();
         session.close();
-
+        return uuid;
 	}
 
 }

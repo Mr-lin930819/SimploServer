@@ -1,8 +1,6 @@
 package thesis.Servlets;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -14,16 +12,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
+import org.hibernate.Session;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import thesis.CommonInfo.QueryCode;
 import thesis.CommonInfo.QueryUrl;
+import thesis.DBOperation.HBUtil;
+import thesis.JavaBean.UserInfoEntity;
 import thesis.httpMethod.NetworkManager;
 
 /**
@@ -46,11 +45,19 @@ public class GradeOptionServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("gb2312");
 		String resultPage = null,jsonText = null;
-		System.out.println(request.getParameter("number") + "  " + request.getParameter("xm") +
-				" " + request.getParameter("cookie"));
-		resultPage = postForCondition(request.getParameter("number"),request.getParameter("xm"),
-				request.getParameter("cookie"));
+		System.out.println(request.getParameter("openUserId"));
+//		System.out.println(request.getParameter("number") + "  " + request.getParameter("xm") +
+//				" " + request.getParameter("cookie"));
+		Session session = HBUtil.getSession();
+		UserInfoEntity userInfo = (UserInfoEntity)session.load(UserInfoEntity.class,
+                request.getParameter("openUserId"));
+//		resultPage = postForCondition(request.getParameter("number"),request.getParameter("xm"),
+//				request.getParameter("cookie"));
+        
+        resultPage = postForCondition(userInfo.getStuNumber(),userInfo.getStuName(),
+				userInfo.getStoredCookie());
 		jsonText = parseReply2Json(resultPage);
+		session.close();
 		response.getWriter().append(jsonText);
 	}
 	

@@ -7,6 +7,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import thesis.CommonInfo.QueryCode;
 import thesis.CommonInfo.QueryUrl;
+import thesis.CommonInfo.RequestKey;
+import thesis.DBOperation.HBEntityUtil;
+import thesis.JavaBean.UserInfoEntity;
 import thesis.httpMethod.NetworkManager;
 
 import java.io.IOException;
@@ -38,9 +41,12 @@ public class CourseOptionServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("gb2312");
-        String jsonData = parse2Json(
-                post4Option(request.getParameter("number"), request.getParameter("xm"), request.getParameter("cookie")));
-		response.getWriter().append(jsonData);
+        UserInfoEntity user = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
+//        String jsonData = parse2Json(
+//                post4Option(request.getParameter("number"), request.getParameter("xm"), request.getParameter("cookie")));
+        String jsonData = parse2Json(post4Option(
+                user.getStuNumber(), user.getStuName(), user.getStoredCookie()));
+        response.getWriter().append(jsonData);
 	}
 
     private String post4Option(String number,String xm,String cookie){
