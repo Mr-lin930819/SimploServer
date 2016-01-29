@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="thesis.JavaBean.UserInfoEntity" table="userstable" schema="simplo_server">
+        <id name="openAppUserId">
+            <!--<generator class="uuid"/>-->
+            <column name="openAppUserId" sql-type="varchar(45)" length="45"/>
+        </id>
+        <property name="stuNumber">
+            <column name="stuNumber" sql-type="varchar(13)" length="13" not-null="true"/>
+        </property>
+        <property name="stuPassword">
+            <column name="stuPassword" sql-type="varchar(25)" length="25" not-null="true"/>
+        </property>
+        <property name="storedCookie">
+            <column name="storedCookie" sql-type="varchar(50)" length="50" not-null="true"/>
+        </property>
+        <property name="genDate">
+            <column name="genDate" sql-type="date" not-null="true"/>
+        </property>
+    </class>
+</hibernate-mapping>
