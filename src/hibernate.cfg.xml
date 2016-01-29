@@ -8,6 +8,6 @@
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="connection.username">simploS</property>
         <property name="connection.password">123456</property>
-        <mapping resource="thesis/JavaBean/UserInfoEntity.hbm.xml"/>
+        <mapping class="thesis.JavaBean.UserInfoEntity"/>
     </session-factory>
 </hibernate-configuration>

@@ -1,17 +1,27 @@
 package thesis.JavaBean;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 import java.sql.Date;
 
 /**
- * Created by Lin on 2016/1/28.
+ * Created by Lin on 2016/1/29.
  */
+@Entity
+@Table(name = "userstable", schema = "simplo_server", catalog = "")
 public class UserInfoEntity {
     private String openAppUserId;
     private String stuNumber;
     private String stuPassword;
     private String storedCookie;
     private Date genDate;
+    private String stuName;
 
+    @Id
+    @GeneratedValue(generator = "paymentableGenerator")
+    @GenericGenerator(name = "paymentableGenerator", strategy = "uuid")
+    
     public String getOpenAppUserId() {
         return openAppUserId;
     }
@@ -20,6 +30,8 @@ public class UserInfoEntity {
         this.openAppUserId = openAppUserId;
     }
 
+    @Basic
+    @Column(name = "stuNumber", nullable = true, length = 13)
     public String getStuNumber() {
         return stuNumber;
     }
@@ -28,6 +40,8 @@ public class UserInfoEntity {
         this.stuNumber = stuNumber;
     }
 
+    @Basic
+    @Column(name = "stuPassword", nullable = true, length = 25)
     public String getStuPassword() {
         return stuPassword;
     }
@@ -36,6 +50,8 @@ public class UserInfoEntity {
         this.stuPassword = stuPassword;
     }
 
+    @Basic
+    @Column(name = "storedCookie", nullable = true, length = 50)
     public String getStoredCookie() {
         return storedCookie;
     }
@@ -44,12 +60,24 @@ public class UserInfoEntity {
         this.storedCookie = storedCookie;
     }
 
+    @Basic
+    @Column(name = "genDate", nullable = true)
     public Date getGenDate() {
         return genDate;
     }
 
     public void setGenDate(Date genDate) {
         this.genDate = genDate;
+    }
+
+    @Basic
+    @Column(name = "stuName", nullable = true, length = 12)
+    public String getStuName() {
+        return stuName;
+    }
+
+    public void setStuName(String stuName) {
+        this.stuName = stuName;
     }
 
     @Override
@@ -65,6 +93,7 @@ public class UserInfoEntity {
         if (stuPassword != null ? !stuPassword.equals(that.stuPassword) : that.stuPassword != null) return false;
         if (storedCookie != null ? !storedCookie.equals(that.storedCookie) : that.storedCookie != null) return false;
         if (genDate != null ? !genDate.equals(that.genDate) : that.genDate != null) return false;
+        if (stuName != null ? !stuName.equals(that.stuName) : that.stuName != null) return false;
 
         return true;
     }
@@ -76,6 +105,7 @@ public class UserInfoEntity {
         result = 31 * result + (stuPassword != null ? stuPassword.hashCode() : 0);
         result = 31 * result + (storedCookie != null ? storedCookie.hashCode() : 0);
         result = 31 * result + (genDate != null ? genDate.hashCode() : 0);
+        result = 31 * result + (stuName != null ? stuName.hashCode() : 0);
         return result;
     }
 }

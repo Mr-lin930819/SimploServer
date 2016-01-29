@@ -54,14 +54,13 @@ public class TryLoginServlet extends HttpServlet {
         session = HBUtil.getSession();
         session.beginTransaction();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
-        UserInfoEntity userInfo = new UserInfoEntity(){
-            {
-                setStuNumber(request.getParameter("number"));
-                setStuPassword(request.getParameter("password"));
-                setStoredCookie(request.getParameter("cookie"));
-                setGenDate(java.sql.Date.valueOf(sdf.format(new Date())));
-            }
-        };
+        UserInfoEntity userInfo = new UserInfoEntity();
+        userInfo.setStuNumber(request.getParameter("number"));
+        userInfo.setStuPassword(request.getParameter("password"));
+        userInfo.setStoredCookie(request.getParameter("cookie"));
+        userInfo.setStuName("你好");
+        userInfo.setGenDate(java.sql.Date.valueOf(sdf.format(new Date())));
+        
         session.save(userInfo);
         session.getTransaction().commit();
         session.close();
