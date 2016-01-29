@@ -14,18 +14,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import thesis.DBOperation.HBUtil;
 import thesis.JavaBean.UserInfoEntity;
-import thesis.Main.Main;
 import thesis.httpMethod.NetworkManager;
 
 /**
@@ -57,8 +51,7 @@ public class TryLoginServlet extends HttpServlet {
 
 //        HBUtil hbUtil = HBUtil.getInstance();
         Session session = null;
-        System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-    	session = Main.getSession();
+        session = HBUtil.getSession();
         session.beginTransaction();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//设置日期格式
         UserInfoEntity userInfo = new UserInfoEntity(){

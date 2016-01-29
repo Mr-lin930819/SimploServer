@@ -6,8 +6,7 @@
 
     <class name="thesis.JavaBean.UserInfoEntity" table="userstable" schema="simplo_server">
         <id name="openAppUserId">
-            <!--<generator class="uuid"/>-->
-            <column name="openAppUserId" sql-type="varchar(45)" length="45"/>
+            <generator class="uuid"/>
         </id>
         <property name="stuNumber">
             <column name="stuNumber" sql-type="varchar(13)" length="13" not-null="true"/>
