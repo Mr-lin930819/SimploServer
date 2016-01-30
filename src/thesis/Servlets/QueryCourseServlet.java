@@ -22,6 +22,9 @@ import org.jsoup.select.Elements;
 
 import thesis.CommonInfo.QueryCode;
 import thesis.CommonInfo.QueryUrl;
+import thesis.CommonInfo.RequestKey;
+import thesis.DBOperation.HBEntityUtil;
+import thesis.JavaBean.UserInfoEntity;
 import thesis.logic.InfoQueryTemplate;
 
 /**
@@ -44,11 +47,15 @@ public class QueryCourseServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String result;
 		response.setCharacterEncoding("gb2312");
-		courseQueryInfo.setNumber(request.getParameter("number"));
-		courseQueryInfo.setName(request.getParameter("name"));
-		courseQueryInfo.setCookie(request.getParameter("cookie"));
-		courseQueryInfo.setXnd(request.getParameter("xn"));
-		courseQueryInfo.setXqd(request.getParameter("xq"));
+		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
+//		courseQueryInfo.setNumber(request.getParameter("number"));
+//		courseQueryInfo.setName(request.getParameter("name"));
+//		courseQueryInfo.setCookie(request.getParameter("cookie"));
+		courseQueryInfo.setNumber(userInfo.getStuNumber());
+		courseQueryInfo.setName(userInfo.getStuName());
+		courseQueryInfo.setCookie(userInfo.getStoredCookie());
+		courseQueryInfo.setXnd(request.getParameter(RequestKey.XN));
+		courseQueryInfo.setXqd(request.getParameter(RequestKey.XQ));
 		
 		result = new CourseQuery(courseQueryInfo,QueryCode.QUERY_COURSE).doQuery();
 		//System.out.print(result);

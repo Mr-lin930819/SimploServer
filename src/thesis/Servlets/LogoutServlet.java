@@ -1,6 +1,7 @@
 package thesis.Servlets;
 
 import org.hibernate.Session;
+import thesis.CommonInfo.RequestKey;
 import thesis.DBOperation.HBUtil;
 import thesis.JavaBean.UserInfoEntity;
 
@@ -21,7 +22,7 @@ public class LogoutServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doLogout(request.getParameter("openAppId"));
+        doLogout(request.getParameter(RequestKey.OPEN_ID));
         //doLogout("56756565");
     }
 

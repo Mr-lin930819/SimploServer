@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +20,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import thesis.CommonInfo.QueryCode;
+import thesis.CommonInfo.QueryUrl;
+import thesis.CommonInfo.RequestKey;
+import thesis.DBOperation.HBEntityUtil;
+import thesis.JavaBean.UserInfoEntity;
 import thesis.logic.InfoQueryTemplate;
 
 /**
@@ -40,17 +46,22 @@ public class QueryExamServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("gb2312");
+
+		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
 		ExamQueryInfo queryInfo = new ExamQueryInfo(){
 			{
-				setNumber(request.getParameter("number"));
-				setName(request.getParameter("name"));
-				setCookie(request.getParameter("cookie"));
-				setXn(request.getParameter("xn"));
-				setXq(request.getParameter("xq"));
-				setFuncId("N121604");
+//				setNumber(request.getParameter("number"));
+//				setName(request.getParameter("name"));
+//				setCookie(request.getParameter("cookie"));
+				setNumber(userInfo.getStuNumber());
+				setName(userInfo.getStuName());
+				setCookie(userInfo.getStoredCookie());
+				setXn(request.getParameter(RequestKey.XN));
+				setXq(request.getParameter(RequestKey.XQ));
+				setFuncId(QueryCode.QUERY_EXAM);
 			}
 		};
-		response.getWriter().write(new ExamQuery(queryInfo, "http://jwgl.fjnu.edu.cn/xskscx.aspx").doQuery());
+		response.getWriter().write(new ExamQuery(queryInfo, QueryUrl.EXAM_QUERY).doQuery());
 	}
 	
 	class ExamQueryInfo{

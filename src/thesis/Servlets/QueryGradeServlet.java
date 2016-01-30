@@ -20,7 +20,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 //import thesis.JavaBean.QueryInfo;
+import thesis.CommonInfo.RequestKey;
+import thesis.DBOperation.HBEntityUtil;
 import thesis.JavaBean.SearchInfo;
+import thesis.JavaBean.UserInfoEntity;
 import thesis.httpMethod.NetworkManager;
 import thesis.CommonInfo.PostParamKey;
 import thesis.CommonInfo.QueryCode;
@@ -46,13 +49,17 @@ public class QueryGradeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("gb2312");
 		String resultPage = null,jsonText = null;
+		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
 		SearchInfo searchInfo = new SearchInfo(){
 			{
-				setNumber(request.getParameter("number"));
-				setCookie(request.getParameter("cookie"));
-				setxNStr(request.getParameter("xn"));
-				setxQStr(request.getParameter("xq"));
-				setName(request.getParameter("xm"));
+//				setNumber(request.getParameter("number"));
+//				setCookie(request.getParameter("cookie"));
+				setNumber(userInfo.getStuNumber());
+				setCookie(userInfo.getStoredCookie());
+				setxNStr(request.getParameter(RequestKey.XN));
+				setxQStr(request.getParameter(RequestKey.XQ));
+//				setName(request.getParameter("xm"));
+				setName(userInfo.getStuName());
 			}
 		};
 		resultPage = postForGradeQuery(searchInfo);

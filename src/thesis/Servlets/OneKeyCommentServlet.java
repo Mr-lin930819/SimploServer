@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import thesis.CommonInfo.RequestKey;
+import thesis.DBOperation.HBEntityUtil;
+import thesis.JavaBean.UserInfoEntity;
 import thesis.logic.InfoQueryTemplate;
 
 /**
@@ -32,8 +35,11 @@ public class OneKeyCommentServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.setCharacterEncoding("gb2312");
-		String result = new DoComment(request.getParameter("number"), request.getParameter("name"),
-				request.getParameter("cookie")).doQuery();
+		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
+		String result = new DoComment(userInfo.getStuNumber(), userInfo.getStuName(), userInfo.getStoredCookie())
+				.doQuery();
+//		String result = new DoComment(request.getParameter("number"), request.getParameter("name"),
+//				request.getParameter("cookie")).doQuery();
 		response.getWriter().append(result);
 	}
 

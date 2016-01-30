@@ -12,7 +12,7 @@ import java.sql.Date;
 @Table(name = "userstable", schema = "simplo_server", catalog = "")
 public class UserInfoEntity {
     private String openAppUserId;
-    private String stuNumber;
+        private String stuNumber;
     private String stuPassword;
     private String storedCookie;
     private Date genDate;

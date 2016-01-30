@@ -18,6 +18,7 @@ import org.hibernate.Session;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import thesis.CommonInfo.RequestKey;
 import thesis.DBOperation.HBUtil;
 import thesis.JavaBean.UserInfoEntity;
 import thesis.httpMethod.NetworkManager;
@@ -51,11 +52,11 @@ public class TryLoginServlet extends HttpServlet {
         
 		HashMap<String, String> loginInfo = new HashMap<String,String>(){
 			{
-				put("number",request.getParameter("number"));
-				put("password",request.getParameter("password"));
-				put("viewState",request.getParameter("viewState"));
-				put("cookie",request.getParameter("cookie"));
-				put("checkCode",request.getParameter("checkCode"));
+				put("number",request.getParameter(RequestKey.NUMBER));
+				put("password",request.getParameter(RequestKey.PASSWORD));
+				put("viewState",request.getParameter(RequestKey.VIEWSTATE));
+				put("cookie",request.getParameter(RequestKey.COOKIE));
+				put("checkCode",request.getParameter(RequestKey.CHECKCODE));
 			}
 		};
 		System.out.print(loginInfo.toString());

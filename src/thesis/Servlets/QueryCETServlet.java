@@ -19,6 +19,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import thesis.CommonInfo.QueryCode;
+import thesis.CommonInfo.QueryUrl;
+import thesis.CommonInfo.RequestKey;
+import thesis.DBOperation.HBEntityUtil;
+import thesis.JavaBean.UserInfoEntity;
 import thesis.Servlets.QueryExamServlet.ExamQueryInfo;
 import thesis.logic.InfoQueryTemplate;
 
@@ -41,17 +46,22 @@ public class QueryCETServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("gb2312");
+
+		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
 		CETQueryInfo queryInfo = new CETQueryInfo(){
 			{
-				setNumber(request.getParameter("number"));
-				setName(request.getParameter("name"));
-				setCookie(request.getParameter("cookie"));
-				setXn(request.getParameter("xn"));
-				setXq(request.getParameter("xq"));
-				setFuncId("N121606");
+//				setNumber(request.getParameter("number"));
+//				setName(request.getParameter("name"));
+//				setCookie(request.getParameter("cookie"));
+				setNumber(userInfo.getStuNumber());
+				setName(userInfo.getStuName());
+				setCookie(userInfo.getStoredCookie());
+				setXn(request.getParameter(RequestKey.XN));
+				setXq(request.getParameter(RequestKey.XQ));
+				setFuncId(QueryCode.QUERY_CET);
 			}
 		};
-		response.getWriter().write(new QueryCET(queryInfo, "http://jwgl.fjnu.edu.cn/xsdjkscx.aspx").doQuery());
+		response.getWriter().write(new QueryCET(queryInfo, QueryUrl.CET_QUERY).doQuery());
 	}
 	
 	class QueryCET extends InfoQueryTemplate{

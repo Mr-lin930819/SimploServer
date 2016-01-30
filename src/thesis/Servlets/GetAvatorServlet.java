@@ -1,5 +1,9 @@
 package thesis.Servlets;
 
+import thesis.CommonInfo.RequestKey;
+import thesis.DBOperation.HBEntityUtil;
+import thesis.JavaBean.UserInfoEntity;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -31,7 +35,9 @@ public class GetAvatorServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setCharacterEncoding("gb2312");
-		byte[] data = getForTouxiang(request.getParameter("cookie"), request.getParameter("number"));
+		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
+		byte[] data = getForTouxiang(userInfo.getStoredCookie(), userInfo.getStuNumber());
+		//byte[] data = getForTouxiang(request.getParameter("cookie"), request.getParameter("number"));
 		response.getOutputStream().write(data);
 	}
 	
