@@ -73,7 +73,7 @@ public class NetworkManager {
             System.out.println("Post Response Code-------->> "+ connection.getResponseCode());
             // 定义 BufferedReader输入流来读取URL的响应
             in = new BufferedReader(new InputStreamReader(
-                    connection.getInputStream()));
+                    connection.getInputStream(),"GBK"));
             String line;
             while ((line = in.readLine()) != null) {
                 result += line;
@@ -162,7 +162,7 @@ public class NetworkManager {
         	
             // 定义BufferedReader输入流来读取URL的响应   
             in = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream()));
+                    new InputStreamReader(conn.getInputStream(),"GBK"));
             String line;
             while ((line = in.readLine()) != null) {
                 result += line;
