@@ -139,7 +139,6 @@ public class QueryGradeServlet extends HttpServlet {
 		nm.addSpecialHeader("Accept-Language","zh-CN");
 		nm.addSpecialHeader("Cache-Control","no-cache");
 		nm.addSpecialHeader("Connection","Keep-Alive");
-		//nm.addSpecialHeader("Content-Length","4413");
 		nm.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
 		nm.addSpecialHeader("Host","jwgl.fjnu.edu.cn");
 		nm.addSpecialHeader("Referer",refererUrl);
