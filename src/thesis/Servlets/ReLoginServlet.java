@@ -108,7 +108,7 @@ public class ReLoginServlet extends HttpServlet {
         
         lgRstPage = nm.sendPost("http://jwgl.fjnu.edu.cn/default2.aspx", params);
         //System.out.println(nm.sendPost("http://jwgl.fjnu.edu.cn/default2.aspx", params));
-        stuMainPage = nm.sendGet("http://jwgl.fjnu.edu.cn/xs_main.aspx?xh="+ loginInfo.get("number"), "");
+        stuMainPage = nm.sendGet("http://jwgl.fjnu.edu.cn/xs_main.aspx?xh="+ user.getStuNumber(), "");
         
         if(lgRstPage == null || stuMainPage == null)
 			return LoginRstCode.SERVER_ERROR;
@@ -116,6 +116,8 @@ public class ReLoginServlet extends HttpServlet {
         if(codeVaileMatcher.find()) {    //验证码不正确
             return LoginRstCode.CHECKCODE_ERROR;
         }
+        System.out.println("\n"+ user.getStuNumber() + user.getStuPassword() + "\n");
+        //System.out.println(stuMainPage);
         xmMatcher = Pattern.compile("<span id=\"xhxm\">(.{0,12})同学</span>").matcher(stuMainPage);
 		if(xmMatcher.find()){
 			xmStr = xmMatcher.group(1);
