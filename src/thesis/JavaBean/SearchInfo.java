@@ -9,6 +9,17 @@ public class SearchInfo {
 	private String xNStr;
 	private String initViewState;
 	private String name;
+	private int subFuction;
+
+	public int getSubFuction() {
+		return subFuction;
+	}
+
+	public void setSubFuction(int subFuction) {
+		this.subFuction = subFuction;
+	}
+
+
 	public String getCookie() {
 		return cookie;
 	}

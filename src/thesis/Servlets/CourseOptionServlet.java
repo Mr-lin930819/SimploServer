@@ -56,7 +56,7 @@ public class CourseOptionServlet extends HttpServlet {
         String mainParm = "xh=" + number+"&xm="+ xm + "&gnmkdm="+ QueryCode.QUERY_COURSE;
 
         nm.clearSpecialHeader();
-        nm.addSpecialHeader("Cookie", /*HttpManager.*/cookie);
+        nm.addSpecialHeader("Cookie", cookie);
         nm.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
         nm.addSpecialHeader("Referer",referUrl);
         reply = nm.sendGet(QueryUrl.COURSE_QUERY, mainParm);

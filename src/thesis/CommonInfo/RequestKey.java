@@ -8,6 +8,7 @@ public class RequestKey {
 
     public final static String XN           = "xn";
     public final static String XQ           = "xq";
+    public final static String GRADE_SUB_FUNC = "grade_function";
     public final static String NUMBER       = "number";
     public final static String NAME         = "xm";
     public final static String COOKIE       = "cookie";

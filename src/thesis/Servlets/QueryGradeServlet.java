@@ -35,6 +35,8 @@ import thesis.CommonInfo.QueryUrl;
 @WebServlet(description = "查询成绩的Servlet", urlPatterns = { "/QueryGradeServlet" })
 public class QueryGradeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final int FN_NORMAL_GRADE 	= 10;
+	private static final int FN_CREDIT_GPA		= 11;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -60,10 +62,11 @@ public class QueryGradeServlet extends HttpServlet {
 				setxQStr(request.getParameter(RequestKey.XQ));
 //				setName(request.getParameter("xm"));
 				setName(userInfo.getStuName());
+				setSubFuction(Integer.valueOf(request.getParameter(RequestKey.GRADE_SUB_FUNC)));
 			}
 		};
 		resultPage = postForGradeQuery(searchInfo);
-		jsonText = saveGradeToJson(resultPage);
+		jsonText = parsePage2Json(resultPage, searchInfo.getSubFuction());
 		System.out.print(jsonText);
 		response.getWriter().append(jsonText);
 	}
@@ -129,7 +132,16 @@ public class QueryGradeServlet extends HttpServlet {
 		//params.put("btnCx","+查++询+");//按学期或者按照学年查询
 		//params.put("Button5","按学年查询");
 		//params.put("Button1","按学期查询");//统一改为按学期查询，因为学期栏不填，同样可以完成按学年查询
-		params.put(PostParamKey.CX_BTN, PostParamKey.CX_BTN_VAL);
+		switch (user.getSubFuction()){
+			case FN_NORMAL_GRADE:	//普通成绩查询
+				params.put(PostParamKey.CX_BTN, PostParamKey.CX_BTN_VAL);
+				break;
+			case FN_CREDIT_GPA:		//成绩统计：查询绩点和学分
+				params.put(PostParamKey.GPA_BTN, PostParamKey.GPA_BTN_VAL);
+				break;
+			default:
+				params.put(PostParamKey.CX_BTN, PostParamKey.CX_BTN_VAL);
+		}
 		
 		refererUrl = QueryUrl.GRADE_QUERY +"?xh=" + 
 				user.getNumber() + "&xm="+xmStr+"&gnmkdm="+QueryCode.QUERY_GRADE;
@@ -148,11 +160,25 @@ public class QueryGradeServlet extends HttpServlet {
 		reply = nm.sendPost(refererUrl, params);
 		return reply;
     }
-	
+
+	private String parsePage2Json(String content, int subFunc) {
+		String resultJson;
+		switch (subFunc) {
+			case FN_NORMAL_GRADE:
+				resultJson = saveGradeToJson(content);
+				break;
+			case FN_CREDIT_GPA:
+				resultJson = saveGPAToJson(content);
+				break;
+			default:
+				resultJson = saveGradeToJson(content);
+		}
+		return resultJson;
+	}
+
 	/**
 	 * 最后一步，提取目标页面中的成绩数据，并封装为json返回
 	 * @param content	页面内容
-	 * @param user		登录用户信息
 	 * @return			json数据
 	 */
 	private String saveGradeToJson(String content){
@@ -189,5 +215,131 @@ public class QueryGradeServlet extends HttpServlet {
 		}
 		return result;
 	}
-	
+
+	/**
+	 * 提取目标页面中的成绩统计数据（学分、绩点），并封装为json返回
+	 * @param content	页面内容
+	 * @return			json数据
+	 */
+	/**
+	 * Json数据结构：
+	 * 		GRADE:{
+	 * 		 	AllCredit:{		(所有课程学分)
+	 *				[
+	 *					{
+	 *						class:"课程性质"
+	 *						need:"学分要求",
+	 *						get:"获得学分",
+	 *						nopass:"未通过学分",
+	 *						rest:"还需学分"
+	 *					},... ...
+	 *				]
+	 * 		 	},
+	 * 		 	OptionCredit:{		(选修课学分)
+	 *					{
+	 *						class:"课程性质"
+	 *						need:"学分要求",
+	 *						get:"获得学分",
+	 *						nopass:"未通过学分",
+	 *						rest:"还需学分"
+	 *					},... ...
+	 * 		 	},
+	 * 		 	GPAInfo:{
+	 * 		 	  	students:"专业学生数量",
+	 * 		 	  	averageGPA:"平均学分绩点",
+	 * 		 	  	totalGPA:"学分绩点总和"
+	 * 		 	},
+	 * 		 	Total:{		(统计)
+	 * 		 	    select:"所选学分",
+	 * 		 	    get:"获得学分",
+	 * 		 	    revamp:"重修学分",
+	 * 		 	    nopass:"正考未通过学分"
+	 * 		 	}
+	 * 		}
+     */
+
+	private String saveGPAToJson(String content){
+		Document doc = null;
+		Element formTable, dataTable, itemTable;
+		Elements courses;
+		String result = null;
+		JSONObject jGrades = new JSONObject();
+		JSONObject jMain = new JSONObject();
+
+		JSONArray nodeAllCredit = new JSONArray();
+		JSONArray nodeOptionCredit = new JSONArray();
+		JSONObject nodeGPAInfo = new JSONObject();
+		JSONObject nodeTotal = new JSONObject();
+
+		HashMap<String, String> tempNode = new HashMap<>();
+
+		doc = Jsoup.parse(content);
+		formTable = doc.select("div[id=divNotPs]").select("table[class=formlist]").first();
+
+		//学分统计
+		itemTable = doc.select("div[id=divNotPs]").select("span[id=xftj").first();
+		String totol = itemTable.select("b").first().text();
+		totol = totol.replaceAll("\\D", "_").replaceAll("_+", "_");
+		String[] items = totol.split("_+");
+		try {
+			nodeTotal.put("select", items[0]);
+			nodeTotal.put("get", items[1]);
+			nodeTotal.put("revamp", items[2]);
+			nodeTotal.put("nopass", items[3]);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		dataTable = formTable.select("tr").first().select("table[class=datelist]").first();
+		courses = dataTable.select("tbody").select("tr");
+
+		//存入所有课程学分信息
+		for(Element course:courses){
+			if(courses.indexOf(course) == 0) continue;
+			tempNode.put("class", course.select("td").get(0).text());
+			tempNode.put("need", course.select("td").get(1).text());
+			tempNode.put("get", course.select("td").get(2).text());
+			tempNode.put("nopass", course.select("td").get(3).text());
+			tempNode.put("rest", course.select("td").get(4).text());
+			nodeAllCredit.put(tempNode);
+			tempNode.clear();
+		}
+		//存入选修课程学分信息
+		dataTable = formTable.select("tr").first().select("table[class=datelist]").get(1);
+		courses = dataTable.select("tbody").select("tr");
+		for(Element course:courses){
+			if(courses.indexOf(course) == 0) continue;
+			tempNode.clear();
+			tempNode.put("class", course.select("td").get(0).text());
+			tempNode.put("need", course.select("td").get(1).text());
+			tempNode.put("get", course.select("td").get(2).text());
+			tempNode.put("nopass", course.select("td").get(3).text());
+			tempNode.put("rest", course.select("td").get(4).text());
+			nodeOptionCredit.put(tempNode);
+		}
+
+		//绩点统计信息
+		courses = formTable.select("tr").get(5).select("td");
+		try {
+			nodeGPAInfo.put("students", courses.get(0).select("b").first().text());
+			nodeGPAInfo.put("averageGPA", courses.get(1).select("b").first().text());
+			nodeGPAInfo.put("totalGPA", courses.get(2)
+					.select("span[id=xftjzh").select("b").first().text());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			jGrades.put("AllCredit", nodeAllCredit);
+			jGrades.put("OptionCredit", nodeOptionCredit);
+			jGrades.put("GPAInfo", nodeGPAInfo);
+			jGrades.put("Total", nodeTotal);
+			jMain.put("GRADE", jGrades);
+			result = jMain.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 }
