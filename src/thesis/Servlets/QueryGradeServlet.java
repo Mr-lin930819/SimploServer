@@ -282,10 +282,10 @@ public class QueryGradeServlet extends HttpServlet {
 		totol = totol.replaceAll("\\D", "_").replaceAll("_+", "_");
 		String[] items = totol.split("_+");
 		try {
-			nodeTotal.put("select", items[0]);
-			nodeTotal.put("get", items[1]);
-			nodeTotal.put("revamp", items[2]);
-			nodeTotal.put("nopass", items[3]);
+			nodeTotal.put("select", items[1]);
+			nodeTotal.put("get", items[2]);
+			nodeTotal.put("revamp", items[3]);
+			nodeTotal.put("nopass", items[4]);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -296,20 +296,21 @@ public class QueryGradeServlet extends HttpServlet {
 		//存入所有课程学分信息
 		for(Element course:courses){
 			if(courses.indexOf(course) == 0) continue;
+			tempNode = new HashMap<>();
 			tempNode.put("class", course.select("td").get(0).text());
 			tempNode.put("need", course.select("td").get(1).text());
 			tempNode.put("get", course.select("td").get(2).text());
 			tempNode.put("nopass", course.select("td").get(3).text());
 			tempNode.put("rest", course.select("td").get(4).text());
 			nodeAllCredit.put(tempNode);
-			tempNode.clear();
 		}
 		//存入选修课程学分信息
 		dataTable = formTable.select("tr").first().select("table[class=datelist]").get(1);
 		courses = dataTable.select("tbody").select("tr");
 		for(Element course:courses){
 			if(courses.indexOf(course) == 0) continue;
-			tempNode.clear();
+			System.out.println(course.toString());
+			tempNode = new HashMap<>();
 			tempNode.put("class", course.select("td").get(0).text());
 			tempNode.put("need", course.select("td").get(1).text());
 			tempNode.put("get", course.select("td").get(2).text());
@@ -319,12 +320,18 @@ public class QueryGradeServlet extends HttpServlet {
 		}
 
 		//绩点统计信息
-		courses = formTable.select("tr").get(5).select("td");
+		//courses = formTable.select("tr").get(5).select("td");
 		try {
-			nodeGPAInfo.put("students", courses.get(0).select("b").first().text());
-			nodeGPAInfo.put("averageGPA", courses.get(1).select("b").first().text());
-			nodeGPAInfo.put("totalGPA", courses.get(2)
-					.select("span[id=xftjzh").select("b").first().text());
+//			nodeGPAInfo.put("students", courses.get(0).select("b").first().text());
+//			nodeGPAInfo.put("averageGPA", courses.get(1).select("b").first().text());
+//			nodeGPAInfo.put("totalGPA", courses.get(2)
+//					.select("span[id=xftjzh").select("b").first().text());
+			nodeGPAInfo.put("students", formTable.select("tr").
+					select("span[id=zyzrs]").select("b").first().text());
+			nodeGPAInfo.put("averageGPA", formTable.select("tr").
+					select("span[id=pjxfjd]").select("b").first().text());
+			nodeGPAInfo.put("totalGPA", formTable.select("tr").
+					select("span[id=xfjdzh").select("b").first().text());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
