@@ -158,7 +158,8 @@ public class QueryExamServlet extends HttpServlet {
 
 		@Override
 		protected String handleError(String reply) {
-			Matcher matcher = Pattern.compile("alert('(.*)'").matcher(reply);
+			//FIXME ≤È—Ø≥…º®¥ÌŒÛ
+			Matcher matcher = Pattern.compile("alert\\('(.*)'").matcher(reply);
 			if(matcher.find()){
 				return "CODE2";
 			}
