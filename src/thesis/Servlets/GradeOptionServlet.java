@@ -82,7 +82,6 @@ public class GradeOptionServlet extends HttpServlet {
 	/**
 	 * 将页面中的信息解析出来保存为json
 	 * @param reply
-	 * @param option
 	 * @return
 	 */
 	private String parseReply2Json(String reply){
@@ -90,12 +89,13 @@ public class GradeOptionServlet extends HttpServlet {
 		Elements options;
 		List<String> data = new ArrayList<String>();
     	Matcher majorMatcher = Pattern.compile("专业：(.{0,30})</td>").matcher(reply),
-    			collegeMatcher = Pattern.compile("学院：(.{0,30})</td>").matcher(reply);
+    			collegeMatcher = null;
 		//main_div = Jsoup.parse(reply).select("div[id=divcxtj]").first();
     	//zy_span = main_div.select("span[id=Label7]").first();
     	//xy_span = main_div.select("span[id=Label6]").first();
 //		System.out.println(reply);
-    	select = Jsoup.parse(reply).select("select[name=ddlxn]").first();
+    	main_div = Jsoup.parse(reply);
+		select =main_div.select("select[name=ddlxn]").first();
     	options = select.select("option");
     	for(Element elem:options){
     		data.add(elem.val());
@@ -108,13 +108,22 @@ public class GradeOptionServlet extends HttpServlet {
 			//body.put("XY", xy_span.text());//学院
 			if(majorMatcher.find())
 				body.put("ZY", majorMatcher.group(1));
-			else
-				body.put("ZY", "暂无专业信息");
+			else {
+				String zyString = main_div.select("span[id=lbl_zymc]").first().text();
+				if(!zyString.isEmpty())
+					body.put("ZY", zyString);
+				else
+					body.put("ZY", "暂无专业信息");
+			}
+
+			String xyLabel = main_div.select("span[id=lbl_xy]").first().text();
+			collegeMatcher = Pattern.compile("学院：(.{0,30})").matcher(xyLabel);
 			if(collegeMatcher.find())
 				body.put("XY", collegeMatcher.group(1));//学院
-			else
+			else {
+
 				body.put("XY", "暂无学院信息");
-			
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

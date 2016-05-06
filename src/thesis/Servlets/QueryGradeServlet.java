@@ -52,6 +52,9 @@ public class QueryGradeServlet extends HttpServlet {
 		response.setCharacterEncoding("gb2312");
 		String resultPage = null,jsonText = null;
 		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
+
+		String gradeSubFunction = request.getParameter(RequestKey.GRADE_SUB_FUNC)==null ?
+				"10" : request.getParameter(RequestKey.GRADE_SUB_FUNC);
 		SearchInfo searchInfo = new SearchInfo(){
 			{
 //				setNumber(request.getParameter("number"));
@@ -62,7 +65,7 @@ public class QueryGradeServlet extends HttpServlet {
 				setxQStr(request.getParameter(RequestKey.XQ));
 //				setName(request.getParameter("xm"));
 				setName(userInfo.getStuName());
-				setSubFuction(Integer.valueOf(request.getParameter(RequestKey.GRADE_SUB_FUNC)));
+				setSubFuction(Integer.valueOf(gradeSubFunction));
 			}
 		};
 		resultPage = postForGradeQuery(searchInfo);
@@ -142,13 +145,21 @@ public class QueryGradeServlet extends HttpServlet {
 			default:
 				params.put(PostParamKey.CX_BTN, PostParamKey.CX_BTN_VAL);
 		}
+		params.put("ddl_kcxz", "");
+		params.put("__EVENTTARGET", "");
+		params.put("__EVENTARGUMENT", "");
+		params.put("hidLanguage", "");
 		
 		refererUrl = QueryUrl.GRADE_QUERY +"?xh=" + 
 				user.getNumber() + "&xm="+xmStr+"&gnmkdm="+QueryCode.QUERY_GRADE;
 		nm.clearSpecialHeader();
-		nm.addSpecialHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+
+		nm.addSpecialHeader("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+		nm.addSpecialHeader("Origin", "Origin: http://jwgl.fjnu.edu.cn");
+		nm.addSpecialHeader("Upgrade-Insecure-Requests", "1");
+
 		nm.addSpecialHeader("Accept-Encoding","gzip,deflate");
-		nm.addSpecialHeader("Accept-Language","zh-CN");
+		nm.addSpecialHeader("Accept-Language","zh-CN,zh;q=0.8");
 		nm.addSpecialHeader("Cache-Control","no-cache");
 		nm.addSpecialHeader("Connection","Keep-Alive");
 		nm.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
@@ -197,7 +208,7 @@ public class QueryGradeServlet extends HttpServlet {
 		
 		for(Element course:courses){
 			name = course.select("td").get(3).text();
-			grade = course.select("td").get(11).text();
+			grade = course.select("td").get(8).text();	//2016.5.6 成绩修改到第8列
 			if(name.equals("课程名称"))
 				continue;
 			try {
