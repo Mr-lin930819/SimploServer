@@ -1,0 +1,11 @@
+
+OPEN_ID = "openUserId"
+XN = "xn"
+XQ = "xq"
+GRADE_SUB_FUNC = "grade_function"
+NUMBER = "number"
+NAME = "xm"
+COOKIE = "cookie"
+PASSWORD = "password"
+VIEWSTATE = "viewState"
+CHECKCODE = "checkCode"
