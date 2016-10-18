@@ -7,7 +7,15 @@
       <imported>true</imported>
       <remarks>$PROJECT_DIR$/simplo/settings.py</remarks>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:E:\Users\Lin\Desktop\simplo\db.sqlite3</jdbc-url>
+      <jdbc-url>jdbc:sqlite:H:\workspace\SimploServer\django\db.sqlite3</jdbc-url>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/xerial-sqlite-license.txt</url>
+        </library>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/sqlite-jdbc-3.8.11.2.jar</url>
+        </library>
+      </libraries>
     </data-source>
   </component>
 </project>

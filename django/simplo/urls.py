@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from simplo import servlets as svr
+from simplo.thesis import servlets as svr
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
