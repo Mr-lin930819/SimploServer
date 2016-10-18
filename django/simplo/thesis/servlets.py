@@ -16,7 +16,6 @@ def check_img(req):
 
 
 def session_verify(req):
-    print(req.GET[OPEN_ID])
     rsp_map_data = {'result': verify_session(req.GET[OPEN_ID])}
     return HttpResponse(conv_map2json(rsp_map_data, "verifyRst"))
 
@@ -40,9 +39,9 @@ def verify_session(open_id):
         "Cookie": userInfo.storedCookie,
         "Accept-Encoding": "gzip, deflate",
         "Accept-Language": "zh-CN,en,*"}
-    query_req = request.Request("http://jwgl.fjnu.edu.cn/xs_main.aspx", headers=query_header)
-    data = parse.urlencode(query_param).encode('utf-8')
-    with request.urlopen(query_req, data=data) as f:
+    query_req = request.Request("http://jwgl.fjnu.edu.cn/xs_main.aspx?"
+                                + parse.urlencode(query_param), headers=query_header)
+    with request.urlopen(query_req) as f:
         stuMainPage = f.read().decode("gbk")
     xm_matcher = re.match("<span id=\"xhxm\">(.{0,12})同学</span>", stuMainPage)
     if xm_matcher:
@@ -53,4 +52,4 @@ def verify_session(open_id):
 
 def conv_map2json(obj_map, key):
     json_map = {key: obj_map}
-    return json.dumps(json_map)
+    return json.dumps(json_map, ensure_ascii=False)
