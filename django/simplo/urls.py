@@ -17,9 +17,11 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from simplo.thesis import servlets as svr
+from simplo.thesis import login as lg
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^CheckImgServlet/', svr.check_img),
-    url(r'^SessionVerifyServlet/', svr.session_verify)
+    url(r'^SessionVerifyServlet/', svr.session_verify),
+    url(r'^LoginPageServlet/', lg.load_login_page)
 ]
