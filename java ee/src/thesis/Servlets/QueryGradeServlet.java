@@ -32,7 +32,7 @@ import thesis.CommonInfo.QueryUrl;
 /**
  * Servlet implementation class QueryGradeServlet
  */
-@WebServlet(description = "²éÑ¯³É¼¨µÄServlet", urlPatterns = { "/QueryGradeServlet" })
+@WebServlet(description = "ï¿½ï¿½Ñ¯ï¿½É¼ï¿½ï¿½ï¿½Servlet", urlPatterns = { "/QueryGradeServlet" })
 public class QueryGradeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final int FN_NORMAL_GRADE 	= 10;
@@ -49,7 +49,7 @@ public class QueryGradeServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("gb2312");
+		response.setCharacterEncoding("utf-8");
 		String resultPage = null,jsonText = null;
 		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
 
@@ -92,8 +92,8 @@ public class QueryGradeServlet extends HttpServlet {
     	Document doc = null;
     	Element form;
 		/**
-		 * 	µÚ4²½£¬getÇëÇó£¬»ñÈ¡ ×îÐÂµÄViewStateÒÔ·ÃÎÊ³É¼¨²éÑ¯Ò³Ãæ
-		 *  ·µ»ØÒ³Ãæ£º°üº¬VIEWSTATE,½âÎö£¬²¢ÇÒ½«ÆäÖÐµÄ¡°+¡±Ìæ»»³É¡°%2B¡±
+		 * 	ï¿½ï¿½4ï¿½ï¿½ï¿½ï¿½getï¿½ï¿½ï¿½ó£¬»ï¿½È¡ ï¿½ï¿½ï¿½Âµï¿½ViewStateï¿½Ô·ï¿½ï¿½Ê³É¼ï¿½ï¿½ï¿½Ñ¯Ò³ï¿½ï¿½
+		 *  ï¿½ï¿½ï¿½ï¿½Ò³ï¿½æ£ºï¿½ï¿½ï¿½ï¿½VIEWSTATE,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò½ï¿½ï¿½ï¿½ï¿½ÐµÄ¡ï¿½+ï¿½ï¿½ï¿½æ»»ï¿½É¡ï¿½%2Bï¿½ï¿½
 		 */
 		String refererUrl = "http://jwgl.fjnu.edu.cn/xs_main.aspx?xh=" + user.getNumber();
 		
@@ -101,16 +101,16 @@ public class QueryGradeServlet extends HttpServlet {
 		nm.addSpecialHeader("Cookie", /*HttpManager.*/user.getCookie());
 		
 		/**
-		 * ´Ë´¦ÇëÇóÔÝÊ±ÒÆµ½µÇÂ¼²¿·Ö´¦Àí£¬»ñµÃÐÕÃû
+		 * ï¿½Ë´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Æµï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		 */
 //		reply = nm.sendGet(refererUrl, "");
 //		Matcher xmMatcher = Pattern.compile("xm=(.{0,12})&gnmkdm=N121618").matcher(reply);
 //		if(xmMatcher.find())
 //	       	xmStr = xmMatcher.group(1);
 		xmStr = user.getName();
-		//String newMainUrl = "http://jwgl.fjnu.edu.cn/xscj_gc.aspx?xh="+user.getNumber()+"&xm="+xmStr+"&gnmkdm="+"N121618";//gnmkdm="N121618";±íÊ¾³É¼¨²éÑ¯µÄ±àºÅ
+		//String newMainUrl = "http://jwgl.fjnu.edu.cn/xscj_gc.aspx?xh="+user.getNumber()+"&xm="+xmStr+"&gnmkdm="+"N121618";//gnmkdm="N121618";ï¿½ï¿½Ê¾ï¿½É¼ï¿½ï¿½ï¿½Ñ¯ï¿½Ä±ï¿½ï¿½
 		String newMainUrl = QueryUrl.GRADE_QUERY + 
-				"?xh=" + user.getNumber()+"&xm="+xmStr+"&gnmkdm="+QueryCode.QUERY_GRADE;//gnmkdm="N121618";±íÊ¾³É¼¨²éÑ¯µÄ±àºÅ
+				"?xh=" + user.getNumber()+"&xm="+xmStr+"&gnmkdm="+QueryCode.QUERY_GRADE;//gnmkdm="N121618";ï¿½ï¿½Ê¾ï¿½É¼ï¿½ï¿½ï¿½Ñ¯ï¿½Ä±ï¿½ï¿½
 		nm.addSpecialHeader("Content-Type","application/x-www-form-urlencoded");
 		nm.addSpecialHeader("Referer",refererUrl);
 		reply = nm.sendGet(newMainUrl, "");
@@ -122,24 +122,24 @@ public class QueryGradeServlet extends HttpServlet {
 		updatedViewState = form.attr("value");
 		updatedViewState =  updatedViewState.replaceAll("[+]", "%2B");
 		/**
-		 * µÚ5²½£¬postÇëÇó£¬ÉèÖÃÑ§ÄêµÈÐÅÏ¢×÷Îªpost²ÎÊý£¬ÉèÖÃÍ·ÐÅÏ¢
-		 * ·µ»ØÒ³Ãæ£º³É¼¨²éÑ¯½á¹û£¬¿ÉÒÔ½âÎö»ñµÃ³É¼¨
+		 * ï¿½ï¿½5ï¿½ï¿½ï¿½ï¿½postï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½Îªpostï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·ï¿½ï¿½Ï¢
+		 * ï¿½ï¿½ï¿½ï¿½Ò³ï¿½æ£ºï¿½É¼ï¿½ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ï¿½ï¿½Ã³É¼ï¿½
 		 */
 		params.clear();
 //		params.put("__EVENTARGUMENT","");
 //		params.put("__EVENTTARGET","");
 		params.put("__VIEWSTATE",updatedViewState);
 		//params.put("hidLanguage","");
-		params.put(PostParamKey.DDL_XN,user.getxNStr());//Ñ§Äê
-		params.put(PostParamKey.DDL_XQ,user.getxQStr());//Ñ§ÆÚ
-		//params.put("btnCx","+²é++Ñ¯+");//°´Ñ§ÆÚ»òÕß°´ÕÕÑ§Äê²éÑ¯
-		//params.put("Button5","°´Ñ§Äê²éÑ¯");
-		//params.put("Button1","°´Ñ§ÆÚ²éÑ¯");//Í³Ò»¸ÄÎª°´Ñ§ÆÚ²éÑ¯£¬ÒòÎªÑ§ÆÚÀ¸²»Ìî£¬Í¬Ñù¿ÉÒÔÍê³É°´Ñ§Äê²éÑ¯
+		params.put(PostParamKey.DDL_XN,user.getxNStr());//Ñ§ï¿½ï¿½
+		params.put(PostParamKey.DDL_XQ,user.getxQStr());//Ñ§ï¿½ï¿½
+		//params.put("btnCx","+ï¿½ï¿½++Ñ¯+");//ï¿½ï¿½Ñ§ï¿½Ú»ï¿½ï¿½ß°ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½ï¿½Ñ¯
+		//params.put("Button5","ï¿½ï¿½Ñ§ï¿½ï¿½ï¿½Ñ¯");
+		//params.put("Button1","ï¿½ï¿½Ñ§ï¿½Ú²ï¿½Ñ¯");//Í³Ò»ï¿½ï¿½Îªï¿½ï¿½Ñ§ï¿½Ú²ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ÎªÑ§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£¬Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É°ï¿½Ñ§ï¿½ï¿½ï¿½Ñ¯
 		switch (user.getSubFuction()){
-			case FN_NORMAL_GRADE:	//ÆÕÍ¨³É¼¨²éÑ¯
+			case FN_NORMAL_GRADE:	//ï¿½ï¿½Í¨ï¿½É¼ï¿½ï¿½ï¿½Ñ¯
 				params.put(PostParamKey.CX_BTN, PostParamKey.CX_BTN_VAL);
 				break;
-			case FN_CREDIT_GPA:		//³É¼¨Í³¼Æ£º²éÑ¯¼¨µãºÍÑ§·Ö
+			case FN_CREDIT_GPA:		//ï¿½É¼ï¿½Í³ï¿½Æ£ï¿½ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½
 				params.put(PostParamKey.GPA_BTN, PostParamKey.GPA_BTN_VAL);
 				break;
 			default:
@@ -188,9 +188,9 @@ public class QueryGradeServlet extends HttpServlet {
 	}
 
 	/**
-	 * ×îºóÒ»²½£¬ÌáÈ¡Ä¿±êÒ³ÃæÖÐµÄ³É¼¨Êý¾Ý£¬²¢·â×°Îªjson·µ»Ø
-	 * @param content	Ò³ÃæÄÚÈÝ
-	 * @return			jsonÊý¾Ý
+	 * ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡Ä¿ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ÐµÄ³É¼ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½ï¿½×°Îªjsonï¿½ï¿½ï¿½ï¿½
+	 * @param content	Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 * @return			jsonï¿½ï¿½ï¿½ï¿½
 	 */
 	private String saveGradeToJson(String content){
 		Document doc = null;
@@ -208,8 +208,8 @@ public class QueryGradeServlet extends HttpServlet {
 		
 		for(Element course:courses){
 			name = course.select("td").get(3).text();
-			grade = course.select("td").get(8).text();	//2016.5.6 ³É¼¨ÐÞ¸Äµ½µÚ8ÁÐ
-			if(name.equals("¿Î³ÌÃû³Æ"))
+			grade = course.select("td").get(8).text();	//2016.5.6 ï¿½É¼ï¿½ï¿½Þ¸Äµï¿½ï¿½ï¿½8ï¿½ï¿½
+			if(name.equals("ï¿½Î³ï¿½ï¿½ï¿½ï¿½ï¿½"))
 				continue;
 			try {
 				jGrades.put(name, grade);
@@ -228,43 +228,43 @@ public class QueryGradeServlet extends HttpServlet {
 	}
 
 	/**
-	 * ÌáÈ¡Ä¿±êÒ³ÃæÖÐµÄ³É¼¨Í³¼ÆÊý¾Ý£¨Ñ§·Ö¡¢¼¨µã£©£¬²¢·â×°Îªjson·µ»Ø
-	 * @param content	Ò³ÃæÄÚÈÝ
-	 * @return			jsonÊý¾Ý
+	 * ï¿½ï¿½È¡Ä¿ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ÐµÄ³É¼ï¿½Í³ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½Ñ§ï¿½Ö¡ï¿½ï¿½ï¿½ï¿½ã£©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×°Îªjsonï¿½ï¿½ï¿½ï¿½
+	 * @param content	Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	 * @return			jsonï¿½ï¿½ï¿½ï¿½
 	 */
 	/**
-	 * JsonÊý¾Ý½á¹¹£º
+	 * Jsonï¿½ï¿½ï¿½Ý½á¹¹ï¿½ï¿½
 	 * 		GRADE:{
-	 * 		 	AllCredit:{		(ËùÓÐ¿Î³ÌÑ§·Ö)
+	 * 		 	AllCredit:{		(ï¿½ï¿½ï¿½Ð¿Î³ï¿½Ñ§ï¿½ï¿½)
 	 *				[
 	 *					{
-	 *						class:"¿Î³ÌÐÔÖÊ"
-	 *						need:"Ñ§·ÖÒªÇó",
-	 *						get:"»ñµÃÑ§·Ö",
-	 *						nopass:"Î´Í¨¹ýÑ§·Ö",
-	 *						rest:"»¹ÐèÑ§·Ö"
+	 *						class:"ï¿½Î³ï¿½ï¿½ï¿½ï¿½ï¿½"
+	 *						need:"Ñ§ï¿½ï¿½Òªï¿½ï¿½",
+	 *						get:"ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½",
+	 *						nopass:"Î´Í¨ï¿½ï¿½Ñ§ï¿½ï¿½",
+	 *						rest:"ï¿½ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½"
 	 *					},... ...
 	 *				]
 	 * 		 	},
-	 * 		 	OptionCredit:{		(Ñ¡ÐÞ¿ÎÑ§·Ö)
+	 * 		 	OptionCredit:{		(Ñ¡ï¿½Þ¿ï¿½Ñ§ï¿½ï¿½)
 	 *					{
-	 *						class:"¿Î³ÌÐÔÖÊ"
-	 *						need:"Ñ§·ÖÒªÇó",
-	 *						get:"»ñµÃÑ§·Ö",
-	 *						nopass:"Î´Í¨¹ýÑ§·Ö",
-	 *						rest:"»¹ÐèÑ§·Ö"
+	 *						class:"ï¿½Î³ï¿½ï¿½ï¿½ï¿½ï¿½"
+	 *						need:"Ñ§ï¿½ï¿½Òªï¿½ï¿½",
+	 *						get:"ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½",
+	 *						nopass:"Î´Í¨ï¿½ï¿½Ñ§ï¿½ï¿½",
+	 *						rest:"ï¿½ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½"
 	 *					},... ...
 	 * 		 	},
 	 * 		 	GPAInfo:{
-	 * 		 	  	students:"×¨ÒµÑ§ÉúÊýÁ¿",
-	 * 		 	  	averageGPA:"Æ½¾ùÑ§·Ö¼¨µã",
-	 * 		 	  	totalGPA:"Ñ§·Ö¼¨µã×ÜºÍ"
+	 * 		 	  	students:"×¨ÒµÑ§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½",
+	 * 		 	  	averageGPA:"Æ½ï¿½ï¿½Ñ§ï¿½Ö¼ï¿½ï¿½ï¿½",
+	 * 		 	  	totalGPA:"Ñ§ï¿½Ö¼ï¿½ï¿½ï¿½ï¿½Üºï¿½"
 	 * 		 	},
-	 * 		 	Total:{		(Í³¼Æ)
-	 * 		 	    select:"ËùÑ¡Ñ§·Ö",
-	 * 		 	    get:"»ñµÃÑ§·Ö",
-	 * 		 	    revamp:"ÖØÐÞÑ§·Ö",
-	 * 		 	    nopass:"Õý¿¼Î´Í¨¹ýÑ§·Ö"
+	 * 		 	Total:{		(Í³ï¿½ï¿½)
+	 * 		 	    select:"ï¿½ï¿½Ñ¡Ñ§ï¿½ï¿½",
+	 * 		 	    get:"ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½",
+	 * 		 	    revamp:"ï¿½ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½",
+	 * 		 	    nopass:"ï¿½ï¿½ï¿½ï¿½Î´Í¨ï¿½ï¿½Ñ§ï¿½ï¿½"
 	 * 		 	}
 	 * 		}
      */
@@ -287,7 +287,7 @@ public class QueryGradeServlet extends HttpServlet {
 		doc = Jsoup.parse(content);
 		formTable = doc.select("div[id=divNotPs]").select("table[class=formlist]").first();
 
-		//Ñ§·ÖÍ³¼Æ
+		//Ñ§ï¿½ï¿½Í³ï¿½ï¿½
 		itemTable = doc.select("div[id=divNotPs]").select("span[id=xftj").first();
 		String totol = itemTable.select("b").first().text();
 		totol = totol.replaceAll("\\D", "_").replaceAll("_+", "_");
@@ -304,7 +304,7 @@ public class QueryGradeServlet extends HttpServlet {
 		dataTable = formTable.select("tr").first().select("table[class=datelist]").first();
 		courses = dataTable.select("tbody").select("tr");
 
-		//´æÈëËùÓÐ¿Î³ÌÑ§·ÖÐÅÏ¢
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿Î³ï¿½Ñ§ï¿½ï¿½ï¿½ï¿½Ï¢
 		for(Element course:courses){
 			if(courses.indexOf(course) == 0) continue;
 			tempNode = new HashMap<>();
@@ -315,7 +315,7 @@ public class QueryGradeServlet extends HttpServlet {
 			tempNode.put("rest", course.select("td").get(4).text());
 			nodeAllCredit.put(tempNode);
 		}
-		//´æÈëÑ¡ÐÞ¿Î³ÌÑ§·ÖÐÅÏ¢
+		//ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½Þ¿Î³ï¿½Ñ§ï¿½ï¿½ï¿½ï¿½Ï¢
 		dataTable = formTable.select("tr").first().select("table[class=datelist]").get(1);
 		courses = dataTable.select("tbody").select("tr");
 		for(Element course:courses){
@@ -330,7 +330,7 @@ public class QueryGradeServlet extends HttpServlet {
 			nodeOptionCredit.put(tempNode);
 		}
 
-		//¼¨µãÍ³¼ÆÐÅÏ¢
+		//ï¿½ï¿½ï¿½ï¿½Í³ï¿½ï¿½ï¿½ï¿½Ï¢
 		//courses = formTable.select("tr").get(5).select("td");
 		try {
 //			nodeGPAInfo.put("students", courses.get(0).select("b").first().text());

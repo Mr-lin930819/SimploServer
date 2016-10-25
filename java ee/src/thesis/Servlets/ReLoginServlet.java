@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 /**
  * Created by mrlin on 2016/3/2.
  */
-@WebServlet(urlPatterns = "/ReLoginServlet", description = "Éí·Ý¹ýÆÚÖØµÇÂ¼")
+@WebServlet(urlPatterns = "/ReLoginServlet", description = "ï¿½ï¿½Ý¹ï¿½ï¿½ï¿½ï¿½Øµï¿½Â¼")
 public class ReLoginServlet extends HttpServlet {
 	private String xmStr = "";
 	
@@ -42,7 +42,7 @@ public class ReLoginServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	response.setCharacterEncoding("gb2312");
+    	response.setCharacterEncoding("utf-8");
 		HashMap<String, String> loginInfo = new HashMap<String,String>(){
 			{
 				put("openid",request.getParameter(RequestKey.OPEN_ID));
@@ -78,19 +78,19 @@ public class ReLoginServlet extends HttpServlet {
         UserInfoEntity user = HBEntityUtil.getUserInfo(loginInfo.get("openid"));
 
     	/**
-    	 *  µÚ1²½£¬getµÇÂ¼Ò³Ãæ
-    	 *  ·µ»ØÒ³Ãæ£ºµÃµ½Ò³ÃæÖÐµÄViewStateÖµ
+    	 *  ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½getï¿½ï¿½Â¼Ò³ï¿½ï¿½
+    	 *  ï¿½ï¿½ï¿½ï¿½Ò³ï¿½æ£ºï¿½Ãµï¿½Ò³ï¿½ï¿½ï¿½Ðµï¿½ViewStateÖµ
     	 */
     	String viewStateNew = loginInfo.get("viewState").replaceAll("[+]", "%2B");
     	/** 
-    	 *  µÚ2²½£¬¸ù¾ÝµÇÂ¼ÐÅÏ¢£¬·¢ËÍpostÇëÇó£¬Æä²ÎÊý°üÀ¨Ñ§ºÃ¡¢ÃÜÂë¡¢ÑéÖ¤Âë
-    	 *  ·µ»ØÒ³Ãæ£ºÈ¡µÃÏìÓ¦Í·ÖÐµÄSet-CookieÊý¾Ý¡£
+    	 *  ï¿½ï¿½2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ýµï¿½Â¼ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½postï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ§ï¿½Ã¡ï¿½ï¿½ï¿½ï¿½ë¡¢ï¿½ï¿½Ö¤ï¿½ï¿½
+    	 *  ï¿½ï¿½ï¿½ï¿½Ò³ï¿½æ£ºÈ¡ï¿½ï¿½ï¿½ï¿½Ó¦Í·ï¿½Ðµï¿½Set-Cookieï¿½ï¿½ï¿½Ý¡ï¿½
     	 */
     	params.put("__VIEWSTATE",viewStateNew);
     	params.put("txtUserName", user.getStuNumber());
     	params.put("TextBox2", user.getStuPassword());
         params.put("txtSecretCode",loginInfo.get("checkCode"));
-        params.put("RadioButtonList1","Ñ§Éú");
+        params.put("RadioButtonList1","Ñ§ï¿½ï¿½");
         params.put("Button1","");
         params.put("lbLanguage","");
         params.put("hidPdrs","");
@@ -112,8 +112,8 @@ public class ReLoginServlet extends HttpServlet {
         
         if(lgRstPage == null || stuMainPage == null)
 			return LoginRstCode.SERVER_ERROR;
-		codeVaileMatcher = Pattern.compile("ÑéÖ¤Âë²»ÕýÈ·").matcher(lgRstPage);
-        if(codeVaileMatcher.find()) {    //ÑéÖ¤Âë²»ÕýÈ·
+		codeVaileMatcher = Pattern.compile("ï¿½ï¿½Ö¤ï¿½ë²»ï¿½ï¿½È·").matcher(lgRstPage);
+        if(codeVaileMatcher.find()) {    //ï¿½ï¿½Ö¤ï¿½ë²»ï¿½ï¿½È·
             return LoginRstCode.CHECKCODE_ERROR;
         }
         System.out.println("\n"+ user.getStuNumber() + user.getStuPassword() + "\n");
@@ -134,7 +134,7 @@ public class ReLoginServlet extends HttpServlet {
                 .get(UserInfoEntity.class, loginInfo.get("openid"));
         session.beginTransaction();
         
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//ÉèÖÃÈÕÆÚ¸ñÊ½
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½Ê½
         userInfo.setStoredCookie(loginInfo.get("cookie"));
         userInfo.setGenDate(java.sql.Date.valueOf(sdf.format(new Date())));
         

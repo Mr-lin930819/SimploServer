@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class GetAvatorServlet
  */
-@WebServlet(description = "»ñÈ¡Í·ÏñÍ¼Æ¬µÄServlet", urlPatterns = { "/GetAvatorServlet" })
+@WebServlet(description = "ï¿½ï¿½È¡Í·ï¿½ï¿½Í¼Æ¬ï¿½ï¿½Servlet", urlPatterns = { "/GetAvatorServlet" })
 public class GetAvatorServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -34,7 +34,7 @@ public class GetAvatorServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("gb2312");
+		response.setCharacterEncoding("utf-8");
 		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
 		byte[] data = getForTouxiang(userInfo.getStoredCookie(), userInfo.getStuNumber());
 		//byte[] data = getForTouxiang(request.getParameter("cookie"), request.getParameter("number"));
@@ -48,7 +48,7 @@ public class GetAvatorServlet extends HttpServlet {
 		try {
 			realUrl = new URL("http://jwgl.fjnu.edu.cn/readimagexs.aspx?xh=" + number);
 		
-	         // ´ò¿ªºÍURLÖ®¼äµÄÁ¬½Ó
+	         // ï¿½ò¿ªºï¿½URLÖ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	         HttpURLConnection connection = (HttpURLConnection)realUrl.openConnection();
 	         connection.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
 	         connection.setRequestProperty("Connection", "Keep-Alive");
@@ -59,7 +59,7 @@ public class GetAvatorServlet extends HttpServlet {
 	         connection.setRequestProperty("Accept-Encoding", "gzip, deflate, sdch");
 	         connection.connect();
 	         in = connection.getInputStream();
-	         //ÐÝÃßÒÔ»ñµÃÍêÕûµÄÍ¼Æ¬£¬ÒòÎªÍøÖ·²ÉÈ¡·Ö¿é´«Êä£¬Èô²»ÐÝÃß1Ãë»áÔì³É¶ÁÈ¡²»ÍêÕû
+	         //ï¿½ï¿½ï¿½ï¿½ï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Ö·ï¿½ï¿½È¡ï¿½Ö¿é´«ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½É¶ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	         Thread.sleep(2000);
 	         
  			retImg = new byte[in.available()];

@@ -30,7 +30,7 @@ import thesis.logic.InfoQueryTemplate;
 /**
  * Servlet implementation class QueryExamServlet
  */
-@WebServlet(description = "²éÑ¯¿¼ÊÔÊ±¼äµÄServlet", urlPatterns = { "/QueryExamServlet" })
+@WebServlet(description = "ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Servlet", urlPatterns = { "/QueryExamServlet" })
 public class QueryExamServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -45,7 +45,7 @@ public class QueryExamServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("gb2312");
+		response.setCharacterEncoding("utf-8");
 
 		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
 		ExamQueryInfo queryInfo = new ExamQueryInfo(){
@@ -130,20 +130,20 @@ public class QueryExamServlet extends HttpServlet {
 			table = doc.select("table[class=datelist]").first();
 			exams = table.select("tbody").first().select("tr");
 			
-			//exmas°üº¬ËùÓÐ¿¼ÊÔÐÅÏ¢µÄ½ÚµãÁÐ±í£¬±éÀú»ñµÃÃ¿Ò»Ïî
+			//exmasï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Ä½Úµï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½
 			for(Element exam : exams){
 				if(exams.indexOf(exam) == 0)
 					continue;
 				examInfo = new JSONArray();
-				examInfo.put(exam.select("td").get(3).text());//¿¼ÊÔÊ±¼ä
-				examInfo.put(exam.select("td").get(4).text());//¿¼ÊÔµØµã
-				examInfo.put(exam.select("td").get(6).text());//×ùÎ»ºÅ
-				examInfo.put(exam.select("td").get(7).text());//Ð£Çø
+				examInfo.put(exam.select("td").get(3).text());//ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+				examInfo.put(exam.select("td").get(4).text());//ï¿½ï¿½ï¿½ÔµØµï¿½
+				examInfo.put(exam.select("td").get(6).text());//ï¿½ï¿½Î»ï¿½ï¿½
+				examInfo.put(exam.select("td").get(7).text());//Ð£ï¿½ï¿½
 				try {
-					retJson.put(exam.select("td").get(1).text(),examInfo);//¿Î³ÌÃû³Æ
+					retJson.put(exam.select("td").get(1).text(),examInfo);//ï¿½Î³ï¿½ï¿½ï¿½ï¿½ï¿½
 				} catch (JSONException e) {
 					e.printStackTrace();
-				}//¿Î³ÌÃû³Æ, value)
+				}//ï¿½Î³ï¿½ï¿½ï¿½ï¿½ï¿½, value)
 			}
 			return retJson.toString();
 		}
@@ -158,7 +158,7 @@ public class QueryExamServlet extends HttpServlet {
 
 		@Override
 		protected String handleError(String reply) {
-			//FIXME ²éÑ¯³É¼¨´íÎó
+			//FIXME ï¿½ï¿½Ñ¯ï¿½É¼ï¿½ï¿½ï¿½ï¿½ï¿½
 			Matcher matcher = Pattern.compile("alert\\('(.*)'").matcher(reply);
 			if(matcher.find()){
 				return "CODE2";

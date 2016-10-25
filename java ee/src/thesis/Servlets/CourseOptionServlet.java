@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class CourseOptionServlet
  */
-@WebServlet(description = "¿Î±í²éÑ¯Ñ¡Ïî", urlPatterns = { "/CourseOptionServlet" })
+@WebServlet(description = "ï¿½Î±ï¿½ï¿½Ñ¯Ñ¡ï¿½ï¿½", urlPatterns = { "/CourseOptionServlet" })
 public class CourseOptionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -40,7 +40,7 @@ public class CourseOptionServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("gb2312");
+		response.setCharacterEncoding("utf-8");
         UserInfoEntity user = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
 //        String jsonData = parse2Json(
 //                post4Option(request.getParameter("number"), request.getParameter("xm"), request.getParameter("cookie")));
@@ -75,7 +75,7 @@ public class CourseOptionServlet extends HttpServlet {
 
         JSONObject body = new JSONObject();
         try {
-            body.put("CXTJ", data);//²éÑ¯Ìõ¼þ£¨Ñ§Äê£©
+            body.put("CXTJ", data);//ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ§ï¿½ê£©
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -48,7 +48,7 @@ public class TryLoginServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("gb2312");
+		response.setCharacterEncoding("utf-8");
         
 		HashMap<String, String> loginInfo = new HashMap<String,String>(){
 			{

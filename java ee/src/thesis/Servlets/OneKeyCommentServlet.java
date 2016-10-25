@@ -17,7 +17,7 @@ import thesis.logic.InfoQueryTemplate;
 /**
  * Servlet implementation class OneKeyCommentServlet
  */
-@WebServlet(description = "Ò»¼ü½ÌÑ§ÆÀ¼Û", urlPatterns = { "/OneKeyCommentServlet" })
+@WebServlet(description = "Ò»ï¿½ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½ï¿½ï¿½", urlPatterns = { "/OneKeyCommentServlet" })
 public class OneKeyCommentServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -34,7 +34,7 @@ public class OneKeyCommentServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.setCharacterEncoding("gb2312");
+		response.setCharacterEncoding("utf-8");
 		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
 		String result = new DoComment(userInfo.getStuNumber(), userInfo.getStuName(), userInfo.getStoredCookie())
 				.doQuery();
@@ -75,16 +75,16 @@ public class OneKeyCommentServlet extends HttpServlet {
 			// TODO Auto-generated method stub
 			params.put("__EVENTTARGET", "");
 			params.put("__EVENTARGUMENT", "");
-			params.put("DataGrid1:_ctl2:JS1", "·Ç³£·ûºÏ");
-			params.put("DataGrid1:_ctl3:JS1", "·Ç³£·ûºÏ");
-			params.put("DataGrid1:_ctl4:JS1", "·Ç³£·ûºÏ");
-			params.put("DataGrid1:_ctl5:JS1", "·Ç³£·ûºÏ");
-			params.put("DataGrid1:_ctl6:JS1", "·Ç³£·ûºÏ");
-			params.put("DataGrid1:_ctl7:JS1", "·Ç³£·ûºÏ");
-			params.put("DataGrid1:_ctl8:JS1", "·Ç³£·ûºÏ");
-			params.put("DataGrid1:_ctl9:JS1", "·Ç³£·ûºÏ");
-			params.put("DataGrid1:_ctl10:JS1", "·Ç³£·ûºÏ");
-			params.put("DataGrid1:_ctl11:JS1", "·Ç³£·ûºÏ");
+			params.put("DataGrid1:_ctl2:JS1", "ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½");
+			params.put("DataGrid1:_ctl3:JS1", "ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½");
+			params.put("DataGrid1:_ctl4:JS1", "ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½");
+			params.put("DataGrid1:_ctl5:JS1", "ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½");
+			params.put("DataGrid1:_ctl6:JS1", "ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½");
+			params.put("DataGrid1:_ctl7:JS1", "ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½");
+			params.put("DataGrid1:_ctl8:JS1", "ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½");
+			params.put("DataGrid1:_ctl9:JS1", "ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½");
+			params.put("DataGrid1:_ctl10:JS1", "ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½");
+			params.put("DataGrid1:_ctl11:JS1", "ï¿½Ç³ï¿½ï¿½ï¿½ï¿½ï¿½");
 		}
 		
 	}

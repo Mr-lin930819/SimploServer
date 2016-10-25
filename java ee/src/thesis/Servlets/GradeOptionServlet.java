@@ -43,7 +43,7 @@ public class GradeOptionServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("gb2312");
+		response.setCharacterEncoding("utf-8");
 		String resultPage = null,jsonText = null;
 		System.out.println(request.getParameter("openUserId"));
 //		System.out.println(request.getParameter("number") + "  " + request.getParameter("xm") +

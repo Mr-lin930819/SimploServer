@@ -46,7 +46,7 @@ public class QueryCourseServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String result;
-		response.setCharacterEncoding("gb2312");
+		response.setCharacterEncoding("utf-8");
 		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
 //		courseQueryInfo.setNumber(request.getParameter("number"));
 //		courseQueryInfo.setName(request.getParameter("name"));

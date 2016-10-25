@@ -19,7 +19,7 @@ import thesis.logic.JsonTool;
 /**
  * Servlet implementation class LoginPageServlet
  */
-@WebServlet(description = "»ñÈ¡µÇÂ¼½çÃæµÄViewStateºÍCookie", urlPatterns = { "/LoginPageServlet" })
+@WebServlet(description = "ï¿½ï¿½È¡ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ViewStateï¿½ï¿½Cookie", urlPatterns = { "/LoginPageServlet" })
 public class LoginPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -34,7 +34,7 @@ public class LoginPageServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("gb2312");
+		response.setCharacterEncoding("utf-8");
 		NetworkManager nm = new NetworkManager();
 		
 		String viewState	= getOne(nm);
@@ -60,8 +60,8 @@ public class LoginPageServlet extends HttpServlet {
 		Document doc = null;
     	Element form;
     	/**
-    	 *  µÚ1²½£¬getµÇÂ¼Ò³Ãæ
-    	 *  ·µ»ØÒ³Ãæ£ºµÃµ½Ò³ÃæÖÐµÄViewStateÖµ
+    	 *  ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½getï¿½ï¿½Â¼Ò³ï¿½ï¿½
+    	 *  ï¿½ï¿½ï¿½ï¿½Ò³ï¿½æ£ºï¿½Ãµï¿½Ò³ï¿½ï¿½ï¿½Ðµï¿½ViewStateÖµ
     	 */
     	nm.clearSpecialHeader();
 		nm.addSpecialHeader("content-type", "application/x-www-form-urlencoded");

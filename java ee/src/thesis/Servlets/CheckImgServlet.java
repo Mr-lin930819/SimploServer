@@ -30,7 +30,7 @@ public class CheckImgServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("gb2312");
+		response.setCharacterEncoding("utf-8");
 //		System.out.println("Cookie Is <-->" + request.getParameter("cookie"));
 		byte [] responseData = getCheckImg(request.getParameter("cookie"));
 		response.getOutputStream().write(responseData);

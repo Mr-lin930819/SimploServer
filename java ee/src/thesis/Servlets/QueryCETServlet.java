@@ -45,7 +45,7 @@ public class QueryCETServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setCharacterEncoding("gb2312");
+		response.setCharacterEncoding("utf-8");
 
 		UserInfoEntity userInfo = HBEntityUtil.getUserInfo(request.getParameter(RequestKey.OPEN_ID));
 		CETQueryInfo queryInfo = new CETQueryInfo(){
@@ -86,27 +86,27 @@ public class QueryCETServlet extends HttpServlet {
 			table = doc.select("table[id=DataGrid1]").first();
 			exams = table.select("tbody").first().select("tr");
 			
-			//exmas°üº¬ËùÓÐ¿¼ÊÔÐÅÏ¢µÄ½ÚµãÁÐ±í£¬±éÀú»ñµÃÃ¿Ò»Ïî
+			//exmasï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Ä½Úµï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿Ò»ï¿½ï¿½
 			for(Element exam : exams){
 				if(exams.indexOf(exam) == 0)
 					continue;
 				examInfo = new JSONArray();
-				examInfo.put(exam.select("td").get(0).text());//Ñ§Äê
-				examInfo.put(exam.select("td").get(1).text());//Ñ§ÆÚ
-				examInfo.put(exam.select("td").get(2).text());//µÈ¼¶¿¼ÊÔÃû³Æ
-				examInfo.put(exam.select("td").get(3).text());//×¼¿¼Ö¤ºÅ
-				examInfo.put(exam.select("td").get(4).text());//¿¼ÊÔÈÕÆÚ
-				examInfo.put(exam.select("td").get(5).text());//³É¼¨
+				examInfo.put(exam.select("td").get(0).text());//Ñ§ï¿½ï¿½
+				examInfo.put(exam.select("td").get(1).text());//Ñ§ï¿½ï¿½
+				examInfo.put(exam.select("td").get(2).text());//ï¿½È¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+				examInfo.put(exam.select("td").get(3).text());//×¼ï¿½ï¿½Ö¤ï¿½ï¿½
+				examInfo.put(exam.select("td").get(4).text());//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+				examInfo.put(exam.select("td").get(5).text());//ï¿½É¼ï¿½
 				
-				examInfo.put(exam.select("td").get(6).text());//ÌýÁ¦³É¼¨
-				examInfo.put(exam.select("td").get(7).text());//ÔÄ¶Á³É¼¨
-				examInfo.put(exam.select("td").get(8).text());//×ÛºÏ³É¼¨
+				examInfo.put(exam.select("td").get(6).text());//ï¿½ï¿½ï¿½ï¿½ï¿½É¼ï¿½
+				examInfo.put(exam.select("td").get(7).text());//ï¿½Ä¶ï¿½ï¿½É¼ï¿½
+				examInfo.put(exam.select("td").get(8).text());//ï¿½ÛºÏ³É¼ï¿½
 				try {
 					retJson.put(String.valueOf(exams.indexOf(exam)),examInfo);
 				} catch (JSONException e) {
 					e.printStackTrace();
 					return null;
-				}//¿Î³ÌÃû³Æ, value)
+				}//ï¿½Î³ï¿½ï¿½ï¿½ï¿½ï¿½, value)
 			}
 			return retJson.toString();
 		}

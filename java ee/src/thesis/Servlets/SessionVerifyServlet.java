@@ -27,7 +27,7 @@ public class SessionVerifyServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HashMap<String, String> rspMapData = new HashMap<String, String>();
-        response.setCharacterEncoding("gb2312");
+        response.setCharacterEncoding("utf-8");
         String rstText = verifySession(request.getParameter(RequestKey.OPEN_ID));
         rspMapData.put("result", rstText);
         response.getWriter().append(JsonTool.convMap2Json(rspMapData,"verifyRst").toString());
