@@ -30,7 +30,7 @@ def get_one():
     header = {"content-type":"application/x-www-form-urlencoded"}
     req = request.Request("http://jwgl.fjnu.edu.cn/default2.aspx", headers=header)
     with request.urlopen(req) as resp:
-        cookie = resp.info().getheader('set-cookie')
+        cookie = resp.getheaders('set-cookie')
         respPage = resp.read().decode("gbk")
     doc = BeautifulSoup(respPage)
     view_state = doc.find('input', name_='__VIEWSTATE')['value']
