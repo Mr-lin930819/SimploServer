@@ -16,13 +16,13 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from simplo.thesis import servlets as svr
-from simplo.thesis import login as lg
+from simplo.thesis import servlets,login,option
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^CheckImgServlet/', svr.check_img),
-    url(r'^SessionVerifyServlet/', svr.session_verify),
-    url(r'^LoginPageServlet/', lg.load_login_page),
-    url(r'^TryLoginServlet/', lg.try_login)
+    url(r'^CheckImgServlet/', servlets.check_img),
+    url(r'^SessionVerifyServlet/', servlets.session_verify),
+    url(r'^LoginPageServlet/', login.load_login_page),
+    url(r'^TryLoginServlet/', login.try_login),
+    url(r'^GradeOptionServlet/', option.load_grade_option)
 ]
