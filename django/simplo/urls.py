@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^CheckImgServlet/', svr.check_img),
     url(r'^SessionVerifyServlet/', svr.session_verify),
-    url(r'^LoginPageServlet/', lg.load_login_page)
+    url(r'^LoginPageServlet/', lg.load_login_page),
+    url(r'^TryLoginServlet/', lg.try_login)
 ]

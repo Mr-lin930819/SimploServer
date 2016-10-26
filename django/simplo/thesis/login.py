@@ -1,6 +1,7 @@
 import base64
 import json
 import re
+import time
 from bs4 import BeautifulSoup
 from urllib import request
 from urllib import parse
@@ -16,12 +17,30 @@ xm_str = ""
 
 def try_login(req):
     login_info = {
-        "number": req.GET[request_keys.OPEN_ID],
+        "number": req.GET[request_keys.NUMBER],
         "password": req.GET[request_keys.PASSWORD],
         "viewState": req.GET[request_keys.VIEWSTATE],
         "cookie": req.GET[request_keys.COOKIE],
         "checkCode": req.GET[request_keys.CHECKCODE]
     }
+    rst_code = tryLogin(login_info)
+    if rst_code == "SUCCESS":
+        main_json = {"xm": xm_str,
+                     "lgRstCode": "1",
+                     "openAppId": save_user(xm_str, login_info)}
+    elif rst_code == "CHECKCODE_ERROR":
+        main_json = {"xm": "",
+                     "lgRstCode": "2",
+                     "openAppId": ""}
+    else:
+        main_json = {"xm": "",
+                     "lgRstCode": "0",
+                     "openAppId": ""}
+
+    print(main_json)
+    body = {"TRY":main_json}
+    return HttpResponse(json.dumps(body, ensure_ascii=False))
+
 
 
 def load_login_page(req):
@@ -30,7 +49,7 @@ def load_login_page(req):
         if item.name == 'ASP.NET_SessionId':
             cookieString = item.value
 
-    print('get cookie' + cookieString)
+    print('get cookie ' + cookieString)
     return HttpResponse(servlets.conv_map2json({
         "viewState":view_state, "cookie":'ASP.NET_SessionId=' + cookieString}, "loginPage"))
 
@@ -48,7 +67,7 @@ def get_one():
     #print(respPage)
     doc = BeautifulSoup(respPage)
     view_state = doc.find("input", attrs={'name':'__VIEWSTATE'})['value']
-    print('get viewState' + view_state)
+    print('get viewState ' + view_state)
     new_view_state = view_state.replace('+', '%2B')
     return new_view_state
 
@@ -56,8 +75,8 @@ def get_one():
 def tryLogin(loginInfo):
     view_state_new = loginInfo['viewState'].replace('+', '%2B')
     query_param = {"__VIEWSTATE": view_state_new,
-                  "txtUserName": loginInfo.get("number"),
-                  "TextBox2": "password",
+                  "txtUserName": loginInfo["number"],
+                  "TextBox2": loginInfo["password"],
                   "txtSecretCode": loginInfo["checkCode"],
                   "RadioButtonList1": "学生",
                   "Button1": "",
@@ -76,15 +95,15 @@ def tryLogin(loginInfo):
                   "Accept-Language": "zh-CN,en,*"}
 
     query_req = request.Request("http://jwgl.fjnu.edu.cn/default2.aspx", headers=req_header,
-                                data=parse.urlencode(query_param, encoding='utf-8'))
+                                data=parse.urlencode(query_param).encode('utf-8'))
 
     with request.urlopen(query_req) as resp:
-        lg_rst_page = resp.read().decode()
+        lg_rst_page = resp.read().decode("gbk")
 
     main_page_req = request.Request("http://jwgl.fjnu.edu.cn/xs_main.aspx?"
                                     + parse.urlencode(main_page_get_param), headers=req_header)
     with request.urlopen(main_page_req) as resp:
-        stu_main_page = resp.read().decode()
+        stu_main_page = resp.read().decode("gbk")
 
     if (not lg_rst_page) or (not stu_main_page):
         return "PASSWD_ERROR"
@@ -93,10 +112,22 @@ def tryLogin(loginInfo):
     if code_vaile_matcher.match(lg_rst_page):
         return "CHECKCODE_ERROR"
 
-    xm_matcher = re.compile("<span id=\"xhxm\">(.{0,12})同学</span>").match(stu_main_page)
+    xm_doc = BeautifulSoup(stu_main_page)
+    find_name = xm_doc.find("span", attrs={'id':'xhxm'}).string
+    xm_matcher = re.compile("(.*)同学").match(find_name)
     if xm_matcher:
         global xm_str
         xm_str = xm_matcher.group(1)
         return "SUCCESS"
     else:
         return "PASSWD_ERROR"
+
+
+def save_user(xm, login_info):
+    user = UserInfoEntity(stuNumber=login_info['number'],
+                          stuPassword=login_info['password'],
+                          storedCookie=login_info['cookie'],
+                          stuName=xm,
+                          genDate=time.strftime('%Y-%m-%d'))
+    user.save()
+    return user.openAppUserId

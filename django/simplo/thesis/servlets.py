@@ -22,7 +22,8 @@ def session_verify(req):
 
 def get_check_img(cookie):
     img_url_str = "http://jwgl.fjnu.edu.cn/CheckCode.aspx"
-    resp = base64.b64decode(request.urlopen(img_url_str).read())
+    #resp = base64.b64decode(request.urlopen(img_url_str).read())
+    resp = request.urlopen(img_url_str).read()
     return resp
 
 

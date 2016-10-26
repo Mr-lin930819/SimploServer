@@ -2,9 +2,13 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/src/thesis/Servlet/test/CheckCodeTest.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/thesis/Servlet/test/TouxiangTest.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/thesis/Servlets/CheckImgServlet.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/thesis/Servlets/GradeOptionServlet.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/thesis/Servlets/LoginPageServlet.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/thesis/Servlets/QueryCourseServlet.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/thesis/Servlets/SessionVerifyServlet.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/thesis/Servlets/TryLoginServlet.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/thesis/logic/InfoQueryTemplate.java" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
