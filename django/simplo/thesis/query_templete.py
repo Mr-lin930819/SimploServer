@@ -53,7 +53,7 @@ class InfoQueryTemplate():
         if funcId == "N12141": # 教学评价
             comment_req = request.Request(newMainUrl, headers=head)
             with request.urlopen(comment_req) as resp:
-                reply = resp.body().read('gbk')
+                reply = resp.read().decode('gbk')
             newMainUrl = self.parseRef(reply)
             list = self.parsePJKC(reply)
 
@@ -61,7 +61,7 @@ class InfoQueryTemplate():
         head["Referer"] = refererUrl
         new_req = request.Request(newMainUrl, headers=head)
         with request.urlopen(new_req) as resp:
-            reply = resp.body().read('gbk')
+            reply = resp.read().decode('gbk')
         if not self.mIsPost:
             return reply
 
@@ -104,7 +104,7 @@ class InfoQueryTemplate():
                                        data=parse.urlencode(params).encode('utf-8'),
                                        headers=new_head)
             with request.urlopen(temp_req) as resp:
-                reply = resp.body().read('gbk')
+                reply = resp.read().decode('gbk')
         return reply
 
     def doQuery(self):

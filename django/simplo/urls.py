@@ -16,7 +16,8 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-from simplo.thesis import servlets,login,option
+from simplo.thesis import servlets,login,option,query
+from simplo.home import index
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -24,5 +25,8 @@ urlpatterns = [
     url(r'^SessionVerifyServlet/', servlets.session_verify),
     url(r'^LoginPageServlet/', login.load_login_page),
     url(r'^TryLoginServlet/', login.try_login),
-    url(r'^GradeOptionServlet/', option.load_grade_option)
+    url(r'^GradeOptionServlet/', option.load_grade_option),
+    url(r'^QueryExamServlet/', query.query_exam),
+    url(r'^QueryCETServlet/', query.query_cet),
+    url(r'^$', index.main_load)
 ]
