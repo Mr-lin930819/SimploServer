@@ -75,7 +75,7 @@ class CETQuery(InfoQueryTemplate):
         doc = BeautifulSoup(reply)
         table = doc.select("table[id=DataGrid1]")[0]
         print(table)
-        exams = table.select("tbody")[0].select("tr")
+        exams = table.select("tr")
         ret_json = {}
         for exam in exams:
             if exams.index(exam)==0:
