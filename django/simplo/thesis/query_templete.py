@@ -24,7 +24,8 @@ class InfoQueryTemplate():
         form = doc.select("input[name=__VIEWSTATE]")[0]
         if not form:
             return ""
-        retViewState = form["value"].replace('+', '%2B')
+        retViewState = form["value"]
+            # .replace('+', '%2B')
         return retViewState
 
     def parsePJKC(self, reply):
@@ -49,7 +50,9 @@ class InfoQueryTemplate():
     def getReply(self, number,name, cookie, funcId, url):
         refererUrl = "http://jwgl.fjnu.edu.cn/xs_main.aspx?xh=" + number
         head = {"Cookie": cookie}
-        newMainUrl = url + "?xh=" + number + "&xm=" + name + "&gnmkdm=" + funcId
+        newMainUrl = url + "?"
+        newParam = {"xh": number, "xm":name, "gnmkdm": funcId}
+        newMainUrl += parse.urlencode(newParam, encoding='utf-8')
         if funcId == "N12141": # 教学评价
             comment_req = request.Request(newMainUrl, headers=head)
             with request.urlopen(comment_req) as resp:
@@ -69,9 +72,10 @@ class InfoQueryTemplate():
         form = doc.select("input[name=__VIEWSTATE]")[0]
         if not form:
             return ""
-        updatedViewState = form["value"].replace('+', '%2B')
+        updatedViewState = form["value"]
+            # .replace('+', '%2B')
 
-        params = {"__VIEWSTATE", updatedViewState}
+        params = {"__VIEWSTATE": updatedViewState}
         self.setSpecialParams(params)
 
         new_head = {"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -100,6 +104,9 @@ class InfoQueryTemplate():
                 request.urlopen(temp_req)
                 reply = "N12141"
         else:
+            print(newMainUrl)
+            print(params)
+            print(new_head)
             temp_req = request.Request(newMainUrl,
                                        data=parse.urlencode(params).encode('utf-8'),
                                        headers=new_head)
@@ -108,10 +115,52 @@ class InfoQueryTemplate():
         return reply
 
     def doQuery(self):
-        reply = self.getReply(self.mNumber, self.mNumber, self.mCookie,
+        reply = self.getReply(self.mNumber, self.mName, self.mCookie,
                               self.mFuncId, self.mUrl)
         if reply == "":
             return self.handleError(reply)
         elif reply == "N12141": #返回"N12141"为特殊情况，进行一键评价
             return ""
         return self.parseReply(reply)
+
+
+class CommonQueryInfo:
+    @property
+    def number(self):
+        return self.__number
+    @property
+    def name(self):
+        return self.__name
+    @property
+    def cookie(self):
+        return self.__cookie
+    @property
+    def xn(self):
+        return self.__xn
+    @property
+    def xq(self):
+        return self.__xq
+    @property
+    def funcId(self):
+        return self.__funcId
+
+    @number.setter
+    def number(self, number):
+        self.__number = number
+    @name.setter
+    def name(self, name):
+        self.__name = name
+    @cookie.setter
+    def cookie(self, cookie):
+        self.__cookie = cookie
+    @xn.setter
+    def xn(self, xn):
+        self.__xn = xn
+
+    @xq.setter
+    def xq(self, xq):
+        self.__xq = xq
+
+    @funcId.setter
+    def funcId(self, funcId):
+        self.__funcId = funcId

@@ -4,9 +4,11 @@ import re
 from urllib import request
 from urllib import parse
 
+from bs4 import BeautifulSoup
 from django.http import HttpResponse
 
 from simplo.thesis.models import UserInfoEntity
+from simplo.thesis import request_keys
 
 OPEN_ID = 'open_id'
 
@@ -16,7 +18,7 @@ def check_img(req):
 
 
 def session_verify(req):
-    rsp_map_data = {'result': verify_session(req.GET[OPEN_ID])}
+    rsp_map_data = {'result': verify_session(req.GET[request_keys.OPEN_ID])}
     return HttpResponse(conv_map2json(rsp_map_data, "verifyRst"))
 
 
@@ -44,7 +46,9 @@ def verify_session(open_id):
                                 + parse.urlencode(query_param), headers=query_header)
     with request.urlopen(query_req) as f:
         stuMainPage = f.read().decode("gbk")
-    xm_matcher = re.match("<span id=\"xhxm\">(.{0,12})同学</span>", stuMainPage)
+    xm_doc = BeautifulSoup(stuMainPage)
+    find_name = xm_doc.find("span", attrs={'id': 'xhxm'}).string
+    xm_matcher = re.compile("(.*)同学").match(find_name)
     if xm_matcher:
         return "SUCCE"
     else:

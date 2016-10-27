@@ -28,5 +28,8 @@ urlpatterns = [
     url(r'^GradeOptionServlet/', option.load_grade_option),
     url(r'^QueryExamServlet/', query.query_exam),
     url(r'^QueryCETServlet/', query.query_cet),
+    url(r'^ReLoginServlet/', login.re_login),
+    url(r'CourseOptionServlet/', option.load_course_option),
+    url(r'QueryCourseServlet/', query.query_course),
     url(r'^$', index.main_load)
 ]

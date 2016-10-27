@@ -42,6 +42,24 @@ def try_login(req):
     return HttpResponse(json.dumps(body, ensure_ascii=False))
 
 
+def re_login(req):
+    login_info = {"openid": req.GET[request_keys.OPEN_ID],
+                "viewState": req.GET[request_keys.VIEWSTATE],
+                "cookie": req.GET[request_keys.COOKIE],
+                "checkCode": req.GET[request_keys.CHECKCODE]}
+    main = {}
+    rstCode = tryLogin(login_info)
+    if rstCode=="SUCCESS":
+        main["result"] = "SUCCE"
+        update_user(login_info)
+    elif rstCode=="CHECKCODE_ERROR":
+        main["result"] = "ERRVR"
+    elif rstCode=="PASSWD_ERROR":
+        main["result"] = "ERRSV"
+    body = {"reLoginRst": main}
+    return HttpResponse(json.dumps(body))
+
+
 
 def load_login_page(req):
     view_state= get_one()
@@ -131,3 +149,10 @@ def save_user(xm, login_info):
                           genDate=time.strftime('%Y-%m-%d'))
     user.save()
     return user.openAppUserId
+
+
+def update_user(login_info):
+    user = UserInfoEntity.objects.get(openAppUserId=login_info["openid"])
+    user.storedCookie = login_info["cookie"]
+    user.genDate = time.strftime('%Y-%m-%d')
+    user.save()
