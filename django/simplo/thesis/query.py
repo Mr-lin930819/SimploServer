@@ -11,7 +11,7 @@ from simplo.thesis import request_keys
 
 def query_exam(req):
     user = UserInfoEntity.objects.get(openAppUserId=req.GET[request_keys.OPEN_ID])
-    query_info = ()
+    query_info = CommonQueryInfo()
     query_info.number = user.stuNumber
     query_info.name = user.stuName
     query_info.cookie = user.storedCookie
@@ -177,5 +177,4 @@ class CourseQuery(InfoQueryTemplate):
                         result += dataCollection[ind+2] + "$"
                     else:
                         result += "$"
-        print(result)
         return result
